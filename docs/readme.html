@@ -1,0 +1,304 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+    margin: 10px 13px 10px 13px;
+}
+a {
+    color: #0069d6;
+}
+a:hover {
+    color: #0050a3;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #404040;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"\201C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+    background-color: #fee9cc;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #d9d9d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #fff;
+    color:#737373;
+    font-size: 11px;
+    padding: 0;
+}
+@media screen and (min-width: 768px) {
+    body {
+        width: 748px;
+        margin:10px auto;
+    }
+}
+</style>
+<title>OAuth2 Token Endpoint and Servlet Filter  Documentation</title>
+</head>
+<body>
+<h1>OAuth2 Token Endpoint and Servlet Filter  Documentation</h1>
+
+<h2>Introduction</h2>
+
+<p>This project implements <a href="http://oauth.net/2/">OAuth2</a> <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-25#section-3.2">Token Endpoint</a> and Servlet Filter which enables adding OAuth2 based token authentication to your servlets. Current Token Endpoint supports <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-25#section-4.4">&lsquo;Client Credentials&rsquo;</a> grant type only.</p>
+
+<h2>Modules</h2>
+
+<ul>
+<li><strong>oauth2-server</strong>: OAuth2 token endpoint web application</li>
+<li><strong>oauth2-filter</strong>: Servlet filter which implements OAuth2 based authentication</li>
+<li><strong>oauth2-common</strong>: Java library contaning implementations of functionalities common to both <strong>oauth2-serve</strong> and <strong>oauth2-filter</strong>.</li>
+</ul>
+
+
+<h2>Installation</h2>
+
+<h3>Database setup</h3>
+
+<p>Current implementation only supports MySQL as the storage. You can find the databae schema(db-script.sql) at <em>$ROOT/modules/oauth2-common/src/main/resources</em>.</p>
+
+<p>Add a resource to your Tomcat context.xml file located in $TOMCAT_ROOT/conf. Resource configuration will look like following.</p>
+
+<pre><code>&lt;Resource name="jdbc/oauthStore" auth="Container" type="javax.sql.DataSource"
+          maxActive="20" maxIdle="5" maxWait="10000"
+          username="oauth2user" password="oauth2password" driverClassName="com.mysql.jdbc.Driver"
+          validationQuery="SELECT 1" testOnBorrow="true" testWhileIdle="true"
+          timeBetweenEvictionRunsMillis="30000" minEvictableIdleTimeMillis="30000"
+          url="jdbc:mysql://localhost:8889/oauth"/&gt;
+</code></pre>
+
+<p>Sample context.xml can be found inside <em>$ROOT/modules/oauth2-common/src/main/resources</em> directory of the source.</p>
+
+<h3>OAuth2 Server</h3>
+
+<p>You just need to copy the WAR file in to Tomcat webapps directory. You don&rsquo;t need to do any configuration changes if you created data source resource with the name <strong>jdbc/oauthStore</strong>. If your resource name is different from that you need to change the value of the <strong>ds-name</strong> initial parameter in the web.xml.</p>
+
+<h3>OAuth2 Filter</h3>
+
+<p>You need to add following dependencies to your web apps pom.xml.</p>
+
+<pre><code>&lt;dependency&gt;
+        &lt;groupId&gt;edu.indiana.d2i.htrc.oauth2&lt;/groupId&gt;
+        &lt;artifactId&gt;common&lt;/artifactId&gt;
+        &lt;version&gt;0.1-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+        &lt;groupId&gt;edu.indiana.d2i.htrc.oauth2&lt;/groupId&gt;
+        &lt;artifactId&gt;filter&lt;/artifactId&gt;
+        &lt;version&gt;0.1-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>This will make sure that all the dependencies required to OAuth2 Filter will get added to your web apps <em>lib</em> directory. <em>Make sure to check whether there is mysql jdbc connector jar is in your webapps lib directory</em>.</p>
+
+<p>You need to have a data source resource configured in your Tomcat&rsquo;s context.xml as described above and your filter configuration in web.xml will look like following.</p>
+
+<pre><code>&lt;filter&gt;
+    &lt;filter-name&gt;oauth2-filter&lt;/filter-name&gt;
+    &lt;filter-class&gt;edu.indiana.d2i.htrc.oauth2.filter.OAuth2Filter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;ds-name&lt;/param-name&gt;
+        &lt;param-value&gt;jdbc/oauthStore&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/filter&gt;
+
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;oauth2-filter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/res&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt; 
+
+&lt;resource-ref&gt;
+  &lt;description&gt;db conn&lt;/description&gt;
+  &lt;res-ref-name&gt;jdbc/oauthStore&lt;/res-ref-name&gt;
+  &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
+  &lt;res-auth&gt;Container&lt;/res-auth&gt;
+&lt;/resource-ref&gt;
+</code></pre>
+
+<p>Make sure to use correct <strong>ds-name</strong> initial parameter value which refers to data source resource created.</p>
+
+<h2>Sample Client</h2>
+
+<pre><code>import org.apache.amber.oauth2.client.OAuthClient;
+import org.apache.amber.oauth2.client.URLConnectionClient;
+import org.apache.amber.oauth2.client.request.OAuthClientRequest;
+import org.apache.amber.oauth2.client.response.OAuthAccessTokenResponse;
+import org.apache.amber.oauth2.common.exception.OAuthProblemException;
+import org.apache.amber.oauth2.common.exception.OAuthSystemException;
+import org.apache.amber.oauth2.common.message.types.GrantType;
+import org.apache.amber.oauth2.common.utils.OAuthUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+
+public class TestClient {
+    public static void main(String[] args) throws OAuthSystemException, OAuthProblemException, IOException {
+
+        // We should not add grant_type=client_credentials param to URL manually.
+        // But current Amber implmentation doesn't automatically add that. So this is required.
+        OAuthClientRequest request = OAuthClientRequest
+            .tokenLocation("http://localhost:8080/oauth2/token?grant_type=client_credentials")
+            .setGrantType(GrantType.CLIENT_CREDENTIALS)
+            .setClientId("milinda")
+            .setClientSecret("test123")
+            .buildQueryMessage();
+
+        OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+
+        OAuthAccessTokenResponse response = oAuthClient.accessToken(request);
+
+        // We can get the token by calling response.getAccessToken(). 
+        // When accessing the resource you need to set the token as a HTTP header.
+
+        URL url = new URL("http://localhost:8080/oauth2/res");
+        URLConnection c = url.openConnection();
+        c.addRequestProperty(Common.HEADER_AUTHORIZATION, response.getAccessToken());
+
+        if (c instanceof HttpURLConnection) {
+            HttpURLConnection httpURLConnection = (HttpURLConnection)c;
+            httpURLConnection.setRequestMethod("GET");
+
+            InputStream inputStream = null;
+            if (httpURLConnection.getResponseCode() == 400) {
+                inputStream = httpURLConnection.getErrorStream();
+            } else {
+                inputStream = httpURLConnection.getInputStream();
+            }
+            String responseBody = OAuthUtils.saveStreamAsString(inputStream);
+            System.out.println(responseBody);
+        }
+    }
+}
+</code></pre>
+
+<p>You should have the following dependencies in client pom.xml.
+    <dependency>
+            <groupId>org.apache.amber</groupId>
+            <artifactId>oauth2-common</artifactId>
+            <version>0.22-incubating-SNAPSHOT</version>
+    </dependency></p>
+
+<pre><code>&lt;dependency&gt;
+        &lt;groupId&gt;org.apache.amber&lt;/groupId&gt;
+        &lt;artifactId&gt;oauth2-client&lt;/artifactId&gt;
+        &lt;version&gt;0.22-incubating-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+        &lt;groupId&gt;org.apache.amber&lt;/groupId&gt;
+        &lt;artifactId&gt;oauth2-authzserver&lt;/artifactId&gt;
+        &lt;version&gt;0.22-incubating-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+        &lt;groupId&gt;org.apache.amber&lt;/groupId&gt;
+        &lt;artifactId&gt;oauth2-httpclient4&lt;/artifactId&gt;
+        &lt;version&gt;0.22-incubating-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p><strong>TODO: Needs to provide set of minimum required jars to write a client.</strong></p>
+
+<h2>TODO</h2>
+
+<ul>
+<li>Add user name to servlet request when authentication is successful.</li>
+<li>Log un-successful authentications at the OAuth2 filte</li>
+<li>OAuth2 server admin console.</li>
+<li>OAuth2 scope support for generating tokens.</li>
+</ul>
+
+</body>
+</html>
