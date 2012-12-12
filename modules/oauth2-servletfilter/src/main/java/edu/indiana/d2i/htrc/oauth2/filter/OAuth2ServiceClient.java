@@ -25,7 +25,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.wso2.carbon.identity.oauth.keys.stub.OAuth2TokenValidationServiceStub;
+import org.wso2.carbon.identity.oauth.stub.OAuth2TokenValidationServiceStub;
 import org.wso2.carbon.identity.oauth2.dto.xsd.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.dto.xsd.OAuth2TokenValidationResponseDTO;
 import org.wso2.carbon.utils.CarbonUtils;

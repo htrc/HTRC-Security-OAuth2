@@ -42,16 +42,18 @@ public class OAuth2Filter implements Filter {
             throw new RuntimeException("Access token not found");
         }
 
-        OAuth2TokenValidationRequestDTO  oauthReq = new OAuth2TokenValidationRequestDTO();
+        OAuth2TokenValidationRequestDTO oauthReq = new OAuth2TokenValidationRequestDTO();
         oauthReq.setAccessToken(accessToken);
         oauthReq.setTokenType("bearer");
 
         try{
             if(!client.validateAuthenticationRequest(oauthReq)){
               // throw error
+              throw new RuntimeException("Access token not found");
             }
         } catch (Exception e) {
             // throw error
+            throw new RuntimeException("Access token not found");
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
