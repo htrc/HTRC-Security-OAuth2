@@ -21,6 +21,8 @@
 
 package edu.indiana.d2i.htrc.oauth2.filter;
 
+import org.apache.amber.oauth2.common.error.OAuthError;
+import org.apache.amber.oauth2.common.exception.OAuthProblemException;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -30,6 +32,8 @@ import org.wso2.carbon.identity.oauth2.dto.xsd.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.dto.xsd.OAuth2TokenValidationResponseDTO;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import java.rmi.RemoteException;
+
 public class OAuth2ServiceClient {
     private OAuth2TokenValidationServiceStub stub;
 
@@ -38,19 +42,10 @@ public class OAuth2ServiceClient {
     public static final String OAUTH2_PROVIDER_USER_NAME = "admin";
     public static final String OAUTH2_PROVIDER_PASSWORD = "admin";
 
-    /**
-     * Instantiates OAuth2TokenValidationService
-     *
-     * @param cookie For session management
-     * @param backendServerURL URL of the back end server where OAuth2TokenValidationService is
-     *            running.
-     * @param configCtx ConfigurationContext
-     * @throws org.apache.axis2.AxisFault
-     */
-    public OAuth2ServiceClient() throws AxisFault {
-        String serviceURL = OAUTH2_PROVIDER_URL + "OAuth2TokenValidationService";
+    public OAuth2ServiceClient(String providerUrl, String userName, String password) throws AxisFault {
+        String serviceURL = providerUrl + "OAuth2TokenValidationService";
         stub = new OAuth2TokenValidationServiceStub(null, serviceURL);
-        CarbonUtils.setBasicAccessSecurityHeaders(OAUTH2_PROVIDER_USER_NAME, OAUTH2_PROVIDER_PASSWORD, true, stub._getServiceClient());
+        CarbonUtils.setBasicAccessSecurityHeaders(userName, password, true, stub._getServiceClient());
         ServiceClient client = stub._getServiceClient();
         Options options = client.getOptions();
         options.setTimeOutInMilliSeconds(TIMEOUT_IN_MILLIS);
@@ -60,15 +55,11 @@ public class OAuth2ServiceClient {
         options.setManageSession(true);
     }
 
-    /**
-     *
-     * @param params
-     * @return
-     * @throws Exception
-     */
-    public boolean validateAuthenticationRequest(OAuth2TokenValidationRequestDTO params)
-            throws Exception {
+    public void validateAuthenticationRequest(OAuth2TokenValidationRequestDTO params)
+            throws OAuthProblemException, RemoteException {
         OAuth2TokenValidationResponseDTO resp = stub.validate(params);
-        return resp.getValid();
+        if(!resp.getValid()){
+            throw  OAuthProblemException.error(OAuthError.ResourceResponse.INVALID_TOKEN);
+        }
     }
 }
