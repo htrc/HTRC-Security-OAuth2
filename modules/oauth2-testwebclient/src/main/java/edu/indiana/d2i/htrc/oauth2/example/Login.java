@@ -21,7 +21,9 @@
 
 package edu.indiana.d2i.htrc.oauth2.example;
 
-public class Login extends ExampleSupport {
+import com.opensymphony.xwork2.ActionSupport;
+
+public class Login extends ActionSupport {
 
     public String execute() throws Exception {
 

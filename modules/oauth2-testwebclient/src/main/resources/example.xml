@@ -8,20 +8,12 @@
 -->
 <struts>
   <package name="example" namespace="/example" extends="struts-default">
-    <action name="HelloWorld" class="edu.indiana.d2i.htrc.oauth2.example.HelloWorld">
-      <result>/example/HelloWorld.jsp</result>
-    </action>
-
     <action name="Login_*" method="{1}" class="edu.indiana.d2i.htrc.oauth2.example.Login">
       <result name="input">/example/Login.jsp</result>
       <result type="redirectAction">Menu</result>
     </action>
-
-    <action name="*" class="edu.indiana.d2i.htrc.oauth2.example.ExampleSupport">
-      <result>/example/{1}.jsp</result>
-    </action>
-    
-    <!-- Add additional "example" package actions here. -->
-    
+      <action name="Index" method="execute" class="edu.indiana.d2i.htrc.oauth2.example.Index">
+          <result name="login">/example/Login.jsp</result>
+      </action>
   </package>
 </struts>
