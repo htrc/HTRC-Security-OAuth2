@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Export-Package: org.wso2.carbon.identity.oauth.common.exception;versio
+ n="4.0.3",org.wso2.carbon.identity.oauth.common;version="4.0.3"
+Built-By: samitha
+Tool: Bnd-1.43.0
+Bundle-Name: WSO2 Carbon - OAuth Common
+Created-By: Apache Maven Bundle Plugin
+Bundle-Vendor: WSO2 Inc
+DynamicImport-Package: *
+Build-Jdk: 1.7.0_07
+Bundle-Version: 4.0.3
+Bnd-LastModified: 1357785443189
+Bundle-ManifestVersion: 2
+Bundle-Description: Common bundle for OAuth BE and FE functionality
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
+Bundle-DocURL: http://wso2.org
+Bundle-SymbolicName: org.wso2.carbon.identity.oauth.common
+

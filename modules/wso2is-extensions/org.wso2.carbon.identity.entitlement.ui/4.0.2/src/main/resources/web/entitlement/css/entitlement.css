@@ -1,0 +1,55 @@
+.arrowUp {
+    background-image: url(../images/up.gif) !important;
+}
+
+.arrowDown {
+    background-image: url(../images/down.gif) !important;
+}
+
+#middle {
+    line-height: 30px;
+}
+
+.noRuleBox {
+    color: #999;
+    border: solid 1px #ccc;
+    padding: 5px;
+    font-style: italic;
+}
+
+.text-box-big {
+    width: 420px !important;
+}
+
+.defaultText {
+    color: #666666;
+    font-style: italic;
+}
+
+.goToAdvance {
+    border: solid 1px #ccc;
+    background-color: #e3f2db;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.formTableTabed{
+    margin:10px;
+}
+
+.formTableTabed td{
+    padding:10px;
+}
+
+table#main-table table.oneline-listing td {
+    padding: 0 5px !important;
+    line-height: 15px;
+}
+table#main-table table.oneline-listing {
+    border-left: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    border-top: 5px solid #CCCCCC;
+    margin-top: 3px;
+    padding: 8px;
+}
+

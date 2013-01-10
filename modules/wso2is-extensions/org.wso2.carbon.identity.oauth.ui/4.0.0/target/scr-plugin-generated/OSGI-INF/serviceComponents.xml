@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">
+    <scr:component enabled="true" immediate="true" name="identity.provider.oauth.ui.component">
+        <implementation class="org.wso2.carbon.identity.oauth.ui.internal.OAuthUIServiceComponent"/>
+        <property name="service.pid" value="identity.provider.oauth.ui.component"/>
+        <reference name="osgi.httpservice" interface="org.osgi.service.http.HttpService" cardinality="1..1" policy="dynamic" bind="setHttpService" unbind="unsetHttpService"/>
+        <reference name="config.context.service" interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1" policy="dynamic" bind="setConfigurationContextService" unbind="unsetConfigurationContextService"/>
+        <reference name="server.configuration" interface="org.wso2.carbon.base.api.ServerConfigurationService" cardinality="1..1" policy="dynamic" bind="setServerConfigurationService" unbind="unsetServerConfigurationService"/>
+    </scr:component>
+</components>
