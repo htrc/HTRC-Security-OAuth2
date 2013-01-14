@@ -185,13 +185,13 @@ public class OAuth2Service extends AbstractAdmin {
     /**
      * Issue user information by validating the access token.
      *
-     * @param userinfoReqDTO <Code>OAuth2UserInfoReqDTO</Code> representing the User Information request
-     * @return <Code>OAuth2UserInfoRespDTO</Code> representing the User Information response
+     * @param userinfoReqDTO <Code>OAuth2UserInfoRequestDTO</Code> representing the User Information request
+     * @return <Code>OAuth2UserInfoResponseDTO</Code> representing the User Information response
      */
-    public OAuth2UserInfoRespDTO issueUserInformation(OAuth2UserInfoReqDTO userinfoReqDTO) {
+    public OAuth2UserInfoResponseDTO issueUserInformation(OAuth2UserInfoRequestDTO userinfoReqDTO) {
 
         TokenMgtDAO tokenMgtDAO = new TokenMgtDAO();
-        OAuth2UserInfoRespDTO userInfoRespDTO = new OAuth2UserInfoRespDTO();
+        OAuth2UserInfoResponseDTO userInfoRespDTO = new OAuth2UserInfoResponseDTO();
 
         String accessToken = userinfoReqDTO.getAccessToken();
         String clientId = userinfoReqDTO.getClientId();

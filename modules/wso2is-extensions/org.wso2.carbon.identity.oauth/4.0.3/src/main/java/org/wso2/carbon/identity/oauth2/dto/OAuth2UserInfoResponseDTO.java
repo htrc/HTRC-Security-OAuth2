@@ -7,7 +7,7 @@ package org.wso2.carbon.identity.oauth2.dto;
  * Time: 3:45 PM
  * To change this template use File | Settings | File Templates.
  */
-public class OAuth2UserInfoRespDTO {
+public class OAuth2UserInfoResponseDTO {
 
     private String authorizedUser;
 

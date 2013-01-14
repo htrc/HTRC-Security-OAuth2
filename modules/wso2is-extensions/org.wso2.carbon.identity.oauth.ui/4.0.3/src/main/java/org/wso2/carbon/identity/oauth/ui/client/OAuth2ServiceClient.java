@@ -21,17 +21,14 @@ package org.wso2.carbon.identity.oauth.ui.client;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
-import org.wso2.carbon.identity.core.util.IdentityConfigParser;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.oauth.ui.internal.OAuthUIServiceComponentHolder;
 import org.wso2.carbon.identity.oauth2.OAuth2Service;
 import org.wso2.carbon.identity.oauth2.ResponseHeader;
+import org.wso2.carbon.identity.oauth2.dto.OAuth2UserInfoRequestDTO;
+import org.wso2.carbon.identity.oauth2.dto.OAuth2UserInfoResponseDTO;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2ServiceStub;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AccessTokenReqDTO;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AccessTokenRespDTO;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AuthorizeReqDTO;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AuthorizeRespDTO;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2ClientValidationResponseDTO;
+import org.wso2.carbon.identity.oauth2.stub.dto.*;
 
 import java.rmi.RemoteException;
 
@@ -175,6 +172,33 @@ public class OAuth2ServiceClient {
 
         respDTO.setRespHeaders(headers);
         return respDTO;
+    }
+
+    public OAuth2UserInfoRespDTO issueUserInfo(OAuth2UserInfoReqDTO userInfoReqDTO)
+            throws RemoteException {
+        if (wsMode) {
+            return stub.issueUserInformation(userInfoReqDTO);
+        }
+        return _issueUserinfo(userInfoReqDTO);
+
+    }
+
+    private OAuth2UserInfoRespDTO _issueUserinfo(OAuth2UserInfoReqDTO userInfoReqDTO)
+            throws RemoteException {
+        OAuth2UserInfoRequestDTO ureqDTO = new OAuth2UserInfoRequestDTO();
+
+        ureqDTO.setClientId(userInfoReqDTO.getClientId());
+        ureqDTO.setClientSecret(userInfoReqDTO.getClientSecret());
+        ureqDTO.setAccessToken(userInfoReqDTO.getAccessToken());
+
+        OAuth2UserInfoResponseDTO resp = oauth2Service.issueUserInformation(ureqDTO);
+
+        OAuth2UserInfoRespDTO respDTO = new OAuth2UserInfoRespDTO();
+
+        respDTO.setAuthorizedUser(resp.getAuthorizedUser());
+        respDTO.setErrorMsg(resp.getErrorMsg());
+
+       return respDTO;
     }
 
 }

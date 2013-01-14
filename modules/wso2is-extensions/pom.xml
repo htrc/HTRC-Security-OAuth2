@@ -72,7 +72,7 @@
         <module>org.wso2.carbon.identity.oauth.common/4.0.0</module>
         <module>org.wso2.carbon.identity.oauth/4.0.3</module>
         <module>org.wso2.carbon.identity.oauth.ui/4.0.3</module>
-        <module>org.wso2.carbon.identity.oauth.mediator/4.0.3</module>
+        <!-- <module>org.wso2.carbon.identity.oauth.mediator/4.0.3</module>-->
 		<module>org.wso2.carbon.identity.scim.provider/4.0.0</module>
         <module>org.wso2.carbon.identity.authentication/4.0.0</module>
         <module>org.wso2.carbon.identity.thrift.authentication/4.0.0</module>
