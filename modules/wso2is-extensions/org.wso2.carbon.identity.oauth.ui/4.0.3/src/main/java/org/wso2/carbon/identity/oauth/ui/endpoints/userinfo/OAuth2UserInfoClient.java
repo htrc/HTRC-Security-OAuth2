@@ -47,4 +47,4 @@ public class OAuth2UserInfoClient {
         }
     }
 }
-}
+

@@ -38,20 +38,20 @@ public class OAuth2UserInfoEndpoint {
     @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
 
-    public Response issueUserInformation(@Context HttpServletRequest request,MultivaluedMap<String,String> paramMap)throws OAuthSystemException {
+    public Response issueUserInformation(@Context HttpServletRequest request, MultivaluedMap<String, String> paramMap) throws OAuthSystemException {
 
         HttpServletRequestWrapper httpRequest = new OAuthRequestWrapper(request, paramMap);
 
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             logUserInfoRequest(httpRequest);
         }
 
         boolean basicOAuthUsed = false;
-        if(request.getHeader(OAuthConstants.HTTP_REQ_HEADER_AUTHZ) != null){
+        if (request.getHeader(OAuthConstants.HTTP_REQ_HEADER_AUTHZ) != null) {
             try {
                 String[] clientCredentials = OAuthUIUtil.extractCredentialsFromAuthzHeader(request.getHeader(OAuthConstants.HTTP_REQ_HEADER_AUTHZ));
 
-                if(paramMap.containsKey(OAuth.OAUTH_CLIENT_ID) && paramMap.containsKey(OAuth.OAUTH_CLIENT_SECRET)){
+                if (paramMap.containsKey(OAuth.OAUTH_CLIENT_ID) && paramMap.containsKey(OAuth.OAUTH_CLIENT_SECRET)) {
 
                     return handleBasicOAuthFailure();
 
@@ -66,7 +66,7 @@ public class OAuth2UserInfoEndpoint {
                         "over the client credentials available as request parameters.");
 
 
-            } catch (OAuthClientException e){
+            } catch (OAuthClientException e) {
                 return handleBasicOAuthFailure();
             }
         }
@@ -78,11 +78,11 @@ public class OAuth2UserInfoEndpoint {
             // exchange the user information for the Access token.
             OAuth2UserInfoRespDTO oAuth2UserInfoRespDTOResp = userInfoClient.getUserInfo(oauthRequest);
             // if there BE has returned an error
-            if(oauth2AccessTokenResp.getError()){
+            if (oauth2AccessTokenResp.getError()) {
                 // if the client has used Basic Auth and if there is an auth failure, HTTP 401 Status
                 // Code should be sent back to the client.
-                if(basicAuthUsed && OAuth2ErrorCodes.INVALID_CLIENT.equals(
-                        oauth2AccessTokenResp.getErrorCode())){
+                if (basicAuthUsed && OAuth2ErrorCodes.INVALID_CLIENT.equals(
+                        oauth2AccessTokenResp.getErrorCode())) {
                     return handleBasicAuthFailure();
                 }
                 // Otherwise send back HTTP 400 Status Code
@@ -91,9 +91,7 @@ public class OAuth2UserInfoEndpoint {
                         oauth2AccessTokenResp.getErrorCode()).setErrorDescription(
                         oauth2AccessTokenResp.getErrorMsg()).buildJSONMessage();
                 return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
-            }
-
-            else {
+            } else {
                 OAuthResponse response = OAuthASResponse.tokenResponse(HttpServletResponse.SC_OK)
                         .setAccessToken(oauth2AccessTokenResp.getAccessToken())
                         .setRefreshToken(oauth2AccessTokenResp.getRefreshToken())
@@ -117,8 +115,13 @@ public class OAuth2UserInfoEndpoint {
                 }
 
                 return respBuilder.entity(response.getBody()).build();
+            }
+
+        } catch (Exception e) {
+
         }
 
+        return null;
     }
 
     private Response handleBasicOAuthFailure() {

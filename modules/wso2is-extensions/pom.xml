@@ -34,19 +34,20 @@
     <url>http://wso2.org</url>
 
     <repositories>
-    <repository>
-         <id>wso2-nexus</id>
-         <name>WSO2 internal Repository</name>
-         <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-         <releases>
-         <enabled>true</enabled>
-         <updatePolicy>daily</updatePolicy>
-         <checksumPolicy>ignore</checksumPolicy>
-         </releases>
-    </repository>
+        <repository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
     </repositories>
 
     <modules>
+        <module>service-stubs</module>
         <module>org.wso2.carbon.identity.base/4.0.0</module>
         <module>org.wso2.carbon.identity.core/4.0.0</module>
         <module>org.wso2.carbon.identity.menu.ui/4.0.0</module>
@@ -73,7 +74,7 @@
         <module>org.wso2.carbon.identity.oauth/4.0.3</module>
         <module>org.wso2.carbon.identity.oauth.ui/4.0.3</module>
         <!-- <module>org.wso2.carbon.identity.oauth.mediator/4.0.3</module>-->
-		<module>org.wso2.carbon.identity.scim.provider/4.0.0</module>
+        <module>org.wso2.carbon.identity.scim.provider/4.0.0</module>
         <module>org.wso2.carbon.identity.authentication/4.0.0</module>
         <module>org.wso2.carbon.identity.thrift.authentication/4.0.0</module>
         <module>org.wso2.carbon.identity.sts.mgt/4.0.0</module>
@@ -124,13 +125,13 @@
                 <artifactId>wss4j</artifactId>
                 <version>${wss4j.version.wso2.identity}</version>
             </dependency>
-		
-	    <!--Charon dependencies-->
-	    <dependency>
-		<groupId>org.wso2.charon</groupId>
-		<artifactId>org.wso2.charon.core</artifactId>
-		<version>${version.charon}</version>
-	    </dependency>
+
+            <!--Charon dependencies-->
+            <dependency>
+                <groupId>org.wso2.charon</groupId>
+                <artifactId>org.wso2.charon.core</artifactId>
+                <version>${version.charon}</version>
+            </dependency>
             <!-- Other External dependencies -->
             <dependency>
                 <groupId>org.openid4java.wso2</groupId>
@@ -308,7 +309,7 @@
 			<dependency>
 				<groupId>org.wso2.carbon</groupId>
 				<artifactId>org.wso2.carbon.server.admin</artifactId>
-				<version>${wso2carbon.version}</version>			
+				<version>${wso2carbon.version}</version>
 			</dependency>
         </dependencies>
     </dependencyManagement>
