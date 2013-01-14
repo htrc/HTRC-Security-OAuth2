@@ -46,76 +46,76 @@ public class OAuth2UserInfoEndpoint {
             logUserInfoRequest(httpRequest);
         }
 
-        boolean basicOAuthUsed = false;
+        boolean basicAuthUsed = false;
         if (request.getHeader(OAuthConstants.HTTP_REQ_HEADER_AUTHZ) != null) {
             try {
                 String[] clientCredentials = OAuthUIUtil.extractCredentialsFromAuthzHeader(request.getHeader(OAuthConstants.HTTP_REQ_HEADER_AUTHZ));
 
                 if (paramMap.containsKey(OAuth.OAUTH_CLIENT_ID) && paramMap.containsKey(OAuth.OAUTH_CLIENT_SECRET)) {
 
-                    return handleBasicOAuthFailure();
+                    return handleBasicAuthFailure();
 
                 }
 
                 paramMap.add(OAuth.OAUTH_CLIENT_ID, clientCredentials[0]);
                 paramMap.add(OAuth.OAUTH_CLIENT_SECRET, clientCredentials[1]);
 
-                basicOAuthUsed = true;
+                basicAuthUsed = true;
 
                 log.debug("HTTP Authorization Header is available which will take precedence " +
                         "over the client credentials available as request parameters.");
 
 
             } catch (OAuthClientException e) {
-                return handleBasicOAuthFailure();
+                return handleBasicAuthFailure();
             }
         }
 
 
         try {
-            OAuthUserInfoRequest oauthRequest = new OAuthUserInfoRequest();
+            OAuthUserInfoRequest oauthRequest = new OAuthUserInfoRequest(httpRequest);
             OAuth2UserInfoClient userInfoClient = new OAuth2UserInfoClient();
             // exchange the user information for the Access token.
             OAuth2UserInfoRespDTO oAuth2UserInfoRespDTOResp = userInfoClient.getUserInfo(oauthRequest);
             // if there BE has returned an error
-            if (oauth2AccessTokenResp.getError()) {
-                // if the client has used Basic Auth and if there is an auth failure, HTTP 401 Status
-                // Code should be sent back to the client.
-                if (basicAuthUsed && OAuth2ErrorCodes.INVALID_CLIENT.equals(
-                        oauth2AccessTokenResp.getErrorCode())) {
-                    return handleBasicAuthFailure();
-                }
-                // Otherwise send back HTTP 400 Status Code
-                OAuthResponse response = OAuthASResponse.errorResponse(
-                        HttpServletResponse.SC_BAD_REQUEST).setError(
-                        oauth2AccessTokenResp.getErrorCode()).setErrorDescription(
-                        oauth2AccessTokenResp.getErrorMsg()).buildJSONMessage();
-                return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
-            } else {
-                OAuthResponse response = OAuthASResponse.tokenResponse(HttpServletResponse.SC_OK)
-                        .setAccessToken(oauth2AccessTokenResp.getAccessToken())
-                        .setRefreshToken(oauth2AccessTokenResp.getRefreshToken())
-                        .setExpiresIn(Long.toString(oauth2AccessTokenResp.getExpiresIn()))
-                        .setTokenType("bearer").buildJSONMessage();
-                ResponseHeader[] headers = oauth2AccessTokenResp.getRespHeaders();
-
-                Response.ResponseBuilder respBuilder = Response
-                        .status(response.getResponseStatus())
-                        .header(OAuthConstants.HTTP_RESP_HEADER_CACHE_CONTROL,
-                                OAuthConstants.HTTP_RESP_HEADER_VAL_CACHE_CONTROL_NO_STORE)
-                        .header(OAuthConstants.HTTP_RESP_HEADER_PRAGMA,
-                                OAuthConstants.HTTP_RESP_HEADER_VAL_PRAGMA_NO_CACHE);
-
-                if (headers != null && headers.length > 0) {
-                    for (int i = 0; i < headers.length; i++) {
-                        if (headers[i] != null) {
-                            respBuilder.header(headers[i].getKey(), headers[i].getValue());
-                        }
-                    }
-                }
-
-                return respBuilder.entity(response.getBody()).build();
-            }
+//            if (oAuth2UserInfoRespDTOResp.ge()) {
+//                // if the client has used Basic Auth and if there is an auth failure, HTTP 401 Status
+//                // Code should be sent back to the client.
+//                if (basicAuthUsed && OAuth2ErrorCodes.INVALID_CLIENT.equals(
+//                        oAuth2UserInfoRespDTOResp.getErrorCode())) {
+//                    return handleBasicAuthFailure();
+//                }
+//                // Otherwise send back HTTP 400 Status Code
+//                OAuthResponse response = OAuthASResponse.errorResponse(
+//                        HttpServletResponse.SC_BAD_REQUEST).setError(
+//                        oAuth2UserInfoRespDTOResp.getErrorCode()).setErrorDescription(
+//                        oAuth2UserInfoRespDTOResp.getErrorMsg()).buildJSONMessage();
+//                return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
+//            } else {
+//                OAuthResponse response = OAuthASResponse.tokenResponse(HttpServletResponse.SC_OK)
+//                        .setAccessToken(oAuth2UserInfoRespDTOResp.getAccessToken())
+//                        .setRefreshToken(oAuth2UserInfoRespDTOResp.getRefreshToken())
+//                        .setExpiresIn(Long.toString(oAuth2UserInfoRespDTOResp.getExpiresIn()))
+//                        .setTokenType("bearer").buildJSONMessage();
+//                ResponseHeader[] headers = oAuth2UserInfoRespDTOResp.getRespHeaders();
+//
+//                Response.ResponseBuilder respBuilder = Response
+//                        .status(response.getResponseStatus())
+//                        .header(OAuthConstants.HTTP_RESP_HEADER_CACHE_CONTROL,
+//                                OAuthConstants.HTTP_RESP_HEADER_VAL_CACHE_CONTROL_NO_STORE)
+//                        .header(OAuthConstants.HTTP_RESP_HEADER_PRAGMA,
+//                                OAuthConstants.HTTP_RESP_HEADER_VAL_PRAGMA_NO_CACHE);
+//
+//                if (headers != null && headers.length > 0) {
+//                    for (int i = 0; i < headers.length; i++) {
+//                        if (headers[i] != null) {
+//                            respBuilder.header(headers[i].getKey(), headers[i].getValue());
+//                        }
+//                    }
+//                }
+//
+//                return respBuilder.entity(response.getBody()).build();
+//            }
 
         } catch (Exception e) {
 
@@ -124,8 +124,13 @@ public class OAuth2UserInfoEndpoint {
         return null;
     }
 
-    private Response handleBasicOAuthFailure() {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+    private Response handleBasicAuthFailure() throws OAuthSystemException {
+        OAuthResponse response = OAuthASResponse.errorResponse(HttpServletResponse.SC_UNAUTHORIZED)
+                .setError(OAuth2ErrorCodes.INVALID_CLIENT)
+                .setErrorDescription("Client Authentication was failed.").buildJSONMessage();
+        return Response.status(response.getResponseStatus())
+                .header(OAuthConstants.HTTP_RESP_HEADER_AUTHENTICATE, OAuthUIUtil.getRealmInfo())
+                .entity(response.getBody()).build();
     }
 
     private void logUserInfoRequest(HttpServletRequestWrapper httpRequest) {

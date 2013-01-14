@@ -1,7 +1,7 @@
 package org.wso2.carbon.identity.oauth2.dto;
 
 
-public class OAuth2UserInfoRequestDTO {
+public class OAuth2UserInfoReqDTO {
 
     private String clientId;
 

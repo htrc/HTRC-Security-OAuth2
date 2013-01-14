@@ -83,6 +83,7 @@
                 <xs:sequence>
                     <xs:element minOccurs="0" name="authorizedUser" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="OAuth2AccessTokenReqDTO">
