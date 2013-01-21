@@ -31,14 +31,22 @@ import org.apache.amber.oauth2.common.message.types.TokenType;
 import org.apache.amber.oauth2.common.utils.OAuthUtils;
 import org.apache.amber.oauth2.rs.request.OAuthAccessResourceRequest;
 import org.apache.amber.oauth2.rs.response.OAuthRSResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.dto.xsd.OAuth2TokenValidationRequestDTO;
 
+import javax.net.ssl.*;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 public class OAuth2Filter implements Filter {
+    private static Log log = LogFactory.getLog(OAuth2Filter.class);
+
     public static final String OAUTH2_PROVIDER_URL = "oauth2.provider.url";
     public static final String OAUTH2_PROVIDER_USERS = "oauth2.provider.user";
     public static final String OAUTH2_PROVIDER_PASSWORD = "oauth2.provider.password";
@@ -51,15 +59,18 @@ public class OAuth2Filter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         providerUrl = filterConfig.getInitParameter(OAUTH2_PROVIDER_URL);
         if(providerUrl == null || providerUrl.isEmpty()){
+            log.error("Cannot find OAuth2 provider URL in filter configuration!");
             throw new RuntimeException("Cannot find OAuth2 provider URL in filter configuration!");
         }
         userName = filterConfig.getInitParameter(OAUTH2_PROVIDER_USERS);
         if(userName == null || userName.isEmpty()){
+            log.error("Cannot find OAuth2 provider username in filter configuration!");
             throw new RuntimeException("Cannot find OAuth2 provider username in filter configuration!");
         }
 
         password = filterConfig.getInitParameter(OAUTH2_PROVIDER_PASSWORD);
         if(password == null || password.isEmpty()){
+            log.error("Cannot find OAuth2 provider password in filter configuration!");
             throw new RuntimeException("Cannot find OAuth2 provider password in filter configuration!");
         }
 
@@ -69,6 +80,47 @@ public class OAuth2Filter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
+
+        SSLContext sc;
+        // Get SSL context
+        try {
+            sc = SSLContext.getInstance("SSL");
+        } catch (NoSuchAlgorithmException e) {
+            log.error("SSLContext.getInstance failed.", e);
+            throw new ServletException(e);
+        }
+        // Create empty HostnameVerifier
+        HostnameVerifier hv = new HostnameVerifier() {
+            public boolean verify(String urlHostName, SSLSession session) {
+                return true;
+            }
+        };
+
+        // Create a trust manager that does not validate certificate chains
+        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(java.security.cert.X509Certificate[] certs,
+                                           String authType) {
+            }
+
+            public void checkServerTrusted(java.security.cert.X509Certificate[] certs,
+                                           String authType) {
+            }
+        }};
+
+        try {
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        } catch (KeyManagementException e) {
+            log.error("SSLContext init error.", e);
+            throw new ServletException(e);
+        }
+        SSLSocketFactory sslSocketFactory = sc.getSocketFactory();
+
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslSocketFactory);
+        HttpsURLConnection.setDefaultHostnameVerifier(hv);
 
         try {
             OAuthAccessResourceRequest accessResourceRequest = new OAuthAccessResourceRequest(req, TokenType.BEARER);
@@ -85,9 +137,14 @@ public class OAuth2Filter implements Filter {
             // Need to add extra information about client which does the request.
             // Need improvements to IS API.
         } catch (OAuthProblemException e) {
+            log.error("OAuth exception.", e);
             respondWithError(res, e);
         } catch (OAuthSystemException e) {
+            log.error("OAuth system exeception.", e);
             throw new ServletException(e);
+        } catch (RemoteException re) {
+            log.error("Error occurred during token validation.", re);
+            throw new ServletException("Error occurred during token validation.", re);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

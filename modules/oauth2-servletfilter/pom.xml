@@ -16,7 +16,18 @@
         <orbit.version.axis2>1.6.1.wso2v5</orbit.version.axis2>
         <orbit.version.axiom>1.2.11.wso2v2</orbit.version.axiom>
     </properties>
-
+    <repositories>
+        <repository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -89,18 +100,7 @@
             <version>${orbit.version.axiom}</version>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </releases>
-        </repository>
-    </repositories>
+
     <build>
         <plugins>
             <plugin>
