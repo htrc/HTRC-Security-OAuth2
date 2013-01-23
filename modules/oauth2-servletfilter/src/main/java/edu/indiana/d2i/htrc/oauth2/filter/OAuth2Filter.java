@@ -51,10 +51,14 @@ public class OAuth2Filter implements Filter {
     public static final String OAUTH2_PROVIDER_USERS = "oauth2.provider.user";
     public static final String OAUTH2_PROVIDER_PASSWORD = "oauth2.provider.password";
     public static final String OAUTH2_RESOURCE_REALM = "oauth2.resource.realm";
+    public static final String TRUST_STORE = "javax.net.ssl.trustStore";
+    public static final String TRUST_STORE_PASSWORD = "javax.net.ssl.trustStorePassword";
     private String providerUrl;
     private String userName;
     private String password;
     private String realm;
+    private String trustStore;
+    private String trustStorePassword;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         providerUrl = filterConfig.getInitParameter(OAUTH2_PROVIDER_URL);
@@ -72,6 +76,14 @@ public class OAuth2Filter implements Filter {
         if(password == null || password.isEmpty()){
             log.error("Cannot find OAuth2 provider password in filter configuration!");
             throw new RuntimeException("Cannot find OAuth2 provider password in filter configuration!");
+        }
+
+        trustStore = filterConfig.getInitParameter(TRUST_STORE);
+        trustStorePassword = filterConfig.getInitParameter(TRUST_STORE_PASSWORD);
+
+        if(trustStore != null && trustStorePassword != null){
+            System.setProperty(TRUST_STORE, trustStore);
+            System.setProperty(TRUST_STORE_PASSWORD, trustStorePassword);
         }
 
         realm = filterConfig.getInitParameter(OAUTH2_RESOURCE_REALM);
@@ -143,6 +155,7 @@ public class OAuth2Filter implements Filter {
             log.error("OAuth system exeception.", e);
             throw new ServletException(e);
         } catch (RemoteException re) {
+            re.printStackTrace();
             log.error("Error occurred during token validation.", re);
             throw new ServletException("Error occurred during token validation.", re);
         }
