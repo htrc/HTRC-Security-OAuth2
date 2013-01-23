@@ -141,7 +141,7 @@ public class OAuth2Filter implements Filter {
             OAuth2ServiceClient client = new OAuth2ServiceClient(providerUrl, userName, password);
             OAuth2TokenValidationRequestDTO oauthReq = new OAuth2TokenValidationRequestDTO();
             oauthReq.setAccessToken(accessToken);
-            oauthReq.setTokenType(TokenType.BEARER.toString());
+            oauthReq.setTokenType("bearer");
 
             // Need to fix this to return user information (reverse lookup)
             client.validateAuthenticationRequest(oauthReq);
