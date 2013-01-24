@@ -18,20 +18,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="issueUserInformation">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="userinfoReqDTO" nillable="true" type="ax2273:OAuth2UserInfoReqDTO"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="issueUserInformationResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2273:OAuth2UserInfoRespDTO"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
             <xs:element name="issueAccessToken">
                 <xs:complexType>
                     <xs:sequence>
@@ -43,6 +29,20 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" nillable="true" type="ax2273:OAuth2AccessTokenRespDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserInformation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userInfoReqDTO" nillable="true" type="ax2273:OAuth2UserInfoReqDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserInformationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2273:OAuth2UserInfoRespDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -72,23 +72,6 @@
                     <xs:element minOccurs="0" name="validClient" type="xs:boolean"/>
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="OAuth2UserInfoReqDTO">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="accessToken" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="clientId" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="clientSecret" nillable="true" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="OAuth2UserInfoRespDTO">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="authorizedUser" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="error" type="xs:boolean"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="respHeaders" nillable="true" type="ax2276:ResponseHeader"/>
-
-                </xs:sequence>
-            </xs:complexType>
             <xs:complexType name="OAuth2AccessTokenReqDTO">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="assertion" nillable="true" type="xs:string"/>
@@ -114,6 +97,21 @@
                     <xs:element minOccurs="0" name="refreshToken" nillable="true" type="xs:string"/>
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="respHeaders" nillable="true" type="ax2276:ResponseHeader"/>
                     <xs:element minOccurs="0" name="tokenType" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="OAuth2UserInfoReqDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="accessToken" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="clientId" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="clientSecret" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="OAuth2UserInfoRespDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="authorizedUser" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="error" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="OAuth2AuthorizeReqDTO">
@@ -161,17 +159,17 @@
     <wsdl:message name="authorizeResponse">
         <wsdl:part name="parameters" element="ns1:authorizeResponse"/>
     </wsdl:message>
-    <wsdl:message name="issueUserInformationRequest">
-        <wsdl:part name="parameters" element="ns1:issueUserInformation"/>
-    </wsdl:message>
-    <wsdl:message name="issueUserInformationResponse">
-        <wsdl:part name="parameters" element="ns1:issueUserInformationResponse"/>
-    </wsdl:message>
     <wsdl:message name="validateClientInfoRequest">
         <wsdl:part name="parameters" element="ns1:validateClientInfo"/>
     </wsdl:message>
     <wsdl:message name="validateClientInfoResponse">
         <wsdl:part name="parameters" element="ns1:validateClientInfoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getUserInformationRequest">
+        <wsdl:part name="parameters" element="ns1:getUserInformation"/>
+    </wsdl:message>
+    <wsdl:message name="getUserInformationResponse">
+        <wsdl:part name="parameters" element="ns1:getUserInformationResponse"/>
     </wsdl:message>
     <wsdl:portType name="OAuth2ServicePortType">
         <wsdl:operation name="issueAccessToken">
@@ -182,13 +180,13 @@
             <wsdl:input message="tns:authorizeRequest" wsaw:Action="urn:authorize"/>
             <wsdl:output message="tns:authorizeResponse" wsaw:Action="urn:authorizeResponse"/>
         </wsdl:operation>
-        <wsdl:operation name="issueUserInformation">
-            <wsdl:input message="tns:issueUserInformationRequest" wsaw:Action="urn:issueUserInformation"/>
-            <wsdl:output message="tns:issueUserInformationResponse" wsaw:Action="urn:issueUserInformationResponse"/>
-        </wsdl:operation>
         <wsdl:operation name="validateClientInfo">
             <wsdl:input message="tns:validateClientInfoRequest" wsaw:Action="urn:validateClientInfo"/>
             <wsdl:output message="tns:validateClientInfoResponse" wsaw:Action="urn:validateClientInfoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserInformation">
+            <wsdl:input message="tns:getUserInformationRequest" wsaw:Action="urn:getUserInformation"/>
+            <wsdl:output message="tns:getUserInformationResponse" wsaw:Action="urn:getUserInformationResponse"/>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="OAuth2ServiceSoap11Binding" type="tns:OAuth2ServicePortType">
@@ -211,8 +209,8 @@
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="issueUserInformation">
-            <soap:operation soapAction="urn:issueUserInformation" style="document"/>
+        <wsdl:operation name="validateClientInfo">
+            <soap:operation soapAction="urn:validateClientInfo" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -220,8 +218,8 @@
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="validateClientInfo">
-            <soap:operation soapAction="urn:validateClientInfo" style="document"/>
+        <wsdl:operation name="getUserInformation">
+            <soap:operation soapAction="urn:getUserInformation" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -250,8 +248,8 @@
                 <soap12:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="issueUserInformation">
-            <soap12:operation soapAction="urn:issueUserInformation" style="document"/>
+        <wsdl:operation name="validateClientInfo">
+            <soap12:operation soapAction="urn:validateClientInfo" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
@@ -259,8 +257,8 @@
                 <soap12:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="validateClientInfo">
-            <soap12:operation soapAction="urn:validateClientInfo" style="document"/>
+        <wsdl:operation name="getUserInformation">
+            <soap12:operation soapAction="urn:getUserInformation" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
@@ -289,8 +287,8 @@
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="issueUserInformation">
-            <http:operation location="issueUserInformation"/>
+        <wsdl:operation name="validateClientInfo">
+            <http:operation location="validateClientInfo"/>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
@@ -298,8 +296,8 @@
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="validateClientInfo">
-            <http:operation location="validateClientInfo"/>
+        <wsdl:operation name="getUserInformation">
+            <http:operation location="getUserInformation"/>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
