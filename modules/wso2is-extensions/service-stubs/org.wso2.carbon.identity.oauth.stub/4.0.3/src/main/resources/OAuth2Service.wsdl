@@ -84,6 +84,9 @@
                     <xs:element minOccurs="0" name="authorizedUser" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="error" type="xs:boolean"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="respHeaders" nillable="true" type="ax2276:ResponseHeader"/>
+
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="OAuth2AccessTokenReqDTO">

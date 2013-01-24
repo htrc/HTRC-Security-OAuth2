@@ -40,7 +40,7 @@ public class OAuth2UserInfoEndpoint {
 
     public Response issueUserInformation(@Context HttpServletRequest request, MultivaluedMap<String, String> paramMap) throws OAuthSystemException {
 
-        HttpServletRequestWrapper httpRequest = new OAuthRequestWrapper(request, paramMap);
+        HttpServletRequestWrapper httpRequest = new OAuthUserInfoRequestWrapper(request, paramMap);
 
         if (log.isDebugEnabled()) {
             logUserInfoRequest(httpRequest);
@@ -76,46 +76,44 @@ public class OAuth2UserInfoEndpoint {
             OAuthUserInfoRequest oauthRequest = new OAuthUserInfoRequest(httpRequest);
             OAuth2UserInfoClient userInfoClient = new OAuth2UserInfoClient();
             // exchange the user information for the Access token.
-            OAuth2UserInfoRespDTO oAuth2UserInfoRespDTOResp = userInfoClient.getUserInfo(oauthRequest);
+            OAuth2UserInfoRespDTO oAuth2UserInfoRespDTO = userInfoClient.getUserInfo(oauthRequest);
             // if there BE has returned an error
-//            if (oAuth2UserInfoRespDTOResp.ge()) {
-//                // if the client has used Basic Auth and if there is an auth failure, HTTP 401 Status
-//                // Code should be sent back to the client.
-//                if (basicAuthUsed && OAuth2ErrorCodes.INVALID_CLIENT.equals(
-//                        oAuth2UserInfoRespDTOResp.getErrorCode())) {
-//                    return handleBasicAuthFailure();
-//                }
-//                // Otherwise send back HTTP 400 Status Code
-//                OAuthResponse response = OAuthASResponse.errorResponse(
-//                        HttpServletResponse.SC_BAD_REQUEST).setError(
-//                        oAuth2UserInfoRespDTOResp.getErrorCode()).setErrorDescription(
-//                        oAuth2UserInfoRespDTOResp.getErrorMsg()).buildJSONMessage();
-//                return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
-//            } else {
-//                OAuthResponse response = OAuthASResponse.tokenResponse(HttpServletResponse.SC_OK)
-//                        .setAccessToken(oAuth2UserInfoRespDTOResp.getAccessToken())
-//                        .setRefreshToken(oAuth2UserInfoRespDTOResp.getRefreshToken())
-//                        .setExpiresIn(Long.toString(oAuth2UserInfoRespDTOResp.getExpiresIn()))
-//                        .setTokenType("bearer").buildJSONMessage();
-//                ResponseHeader[] headers = oAuth2UserInfoRespDTOResp.getRespHeaders();
-//
-//                Response.ResponseBuilder respBuilder = Response
-//                        .status(response.getResponseStatus())
-//                        .header(OAuthConstants.HTTP_RESP_HEADER_CACHE_CONTROL,
-//                                OAuthConstants.HTTP_RESP_HEADER_VAL_CACHE_CONTROL_NO_STORE)
-//                        .header(OAuthConstants.HTTP_RESP_HEADER_PRAGMA,
-//                                OAuthConstants.HTTP_RESP_HEADER_VAL_PRAGMA_NO_CACHE);
-//
-//                if (headers != null && headers.length > 0) {
-//                    for (int i = 0; i < headers.length; i++) {
-//                        if (headers[i] != null) {
-//                            respBuilder.header(headers[i].getKey(), headers[i].getValue());
-//                        }
-//                    }
-//                }
-//
-//                return respBuilder.entity(response.getBody()).build();
-//            }
+            if (oAuth2UserInfoRespDTO.getError()) {
+                // if the client has used Basic Auth and if there is an auth failure, HTTP 401 Status
+                // Code should be sent back to the client.
+                if (basicAuthUsed && OAuth2ErrorCodes.INVALID_CLIENT.equals(
+                        oAuth2UserInfoRespDTO.getErrorCode())) {
+                    return handleBasicAuthFailure();
+                }
+                // Otherwise send back HTTP 400 Status Code
+                OAuthResponse response = org.wso2.carbon.identity.oauth.ui.endpoints.userinfo.OAuthResponse.errorResponse(
+                        HttpServletResponse.SC_BAD_REQUEST).setError(
+                        oAuth2UserInfoRespDTO.getErrorCode()).setErrorDescription(
+                        oAuth2UserInfoRespDTO.getErrorMsg()).buildJSONMessage();
+                return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
+            } else {
+                org.wso2.carbon.identity.oauth.ui.endpoints.userinfo.OAuthASResponse.OAuthUserInfoResponseBuilder response = org.wso2.carbon.identity.oauth.ui.endpoints.userinfo.OAuthASResponse.userInfoResponse(HttpServletResponse.SC_OK)
+                        .setUserInfo(oAuth2UserInfoRespDTO.getAuthorizedUser());
+                ResponseHeader[] headers = oAuth2UserInfoRespDTO.getRespHeaders();
+
+
+                Response.ResponseBuilder respBuilder = Response
+                        .status(response.getResponseStatus())
+                        .header(OAuthConstants.HTTP_RESP_HEADER_CACHE_CONTROL,
+                                OAuthConstants.HTTP_RESP_HEADER_VAL_CACHE_CONTROL_NO_STORE)
+                        .header(OAuthConstants.HTTP_RESP_HEADER_PRAGMA,
+                                OAuthConstants.HTTP_RESP_HEADER_VAL_PRAGMA_NO_CACHE);
+
+                if (headers != null && headers.length > 0) {
+                    for (int i = 0; i < headers.length; i++) {
+                        if (headers[i] != null) {
+                            respBuilder.header(headers[i].getKey(), headers[i].getValue());
+                        }
+                    }
+                }
+
+                return respBuilder.entity(response.getBody()).build();
+            }
 
         } catch (Exception e) {
 

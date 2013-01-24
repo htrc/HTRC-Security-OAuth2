@@ -1,5 +1,7 @@
 package org.wso2.carbon.identity.oauth2.dto;
 
+import org.wso2.carbon.identity.oauth2.ResponseHeader;
+
 /**
  * Created with IntelliJ IDEA.
  * User: samitha
@@ -12,6 +14,24 @@ public class OAuth2UserInfoRespDTO {
     private String authorizedUser;
 
     private String errorMsg;
+
+    boolean error;
+
+    String errorCode;
+
+    ResponseHeader[] respHeaders;
+
+
+    public ResponseHeader[] getRespHeaders() {
+        if (respHeaders==null){
+            return new ResponseHeader[0];
+        }
+        return respHeaders;
+    }
+
+    public void setRespHeaders(ResponseHeader[] respHeaders) {
+        this.respHeaders = respHeaders;
+    }
 
 
     public String getAuthorizedUser() {
@@ -28,5 +48,21 @@ public class OAuth2UserInfoRespDTO {
 
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
     }
 }
