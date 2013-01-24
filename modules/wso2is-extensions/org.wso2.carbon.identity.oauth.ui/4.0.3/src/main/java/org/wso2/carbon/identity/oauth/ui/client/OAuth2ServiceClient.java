@@ -174,16 +174,16 @@ public class OAuth2ServiceClient {
         return respDTO;
     }
 
-    public org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoRespDTO issueUserInfo(org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoReqDTO userInfoReqDTO)
+    public org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoRespDTO getUserInfo(org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoReqDTO userInfoReqDTO)
             throws RemoteException {
         if (wsMode) {
-            return stub.issueUserInformation(userInfoReqDTO);
+            return stub.getUserInformation(userInfoReqDTO);
         }
-        return _issueUserinfo(userInfoReqDTO);
+        return _getUserInfo(userInfoReqDTO);
 
     }
 
-    private org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoRespDTO _issueUserinfo(org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoReqDTO userInfoReqDTO)
+    private org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoRespDTO _getUserInfo(org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoReqDTO userInfoReqDTO)
             throws RemoteException {
         OAuth2UserInfoReqDTO ureqDTO = new OAuth2UserInfoReqDTO();
 
@@ -191,12 +191,14 @@ public class OAuth2ServiceClient {
         ureqDTO.setClientSecret(userInfoReqDTO.getClientSecret());
         ureqDTO.setAccessToken(userInfoReqDTO.getAccessToken());
 
-        OAuth2UserInfoRespDTO resp = oauth2Service.issueUserInformation(ureqDTO);
+        OAuth2UserInfoRespDTO resp = oauth2Service.getUserInformation(ureqDTO);
 
         org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoRespDTO respDTO = new org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoRespDTO();
 
         respDTO.setAuthorizedUser(resp.getAuthorizedUser());
         respDTO.setErrorMsg(resp.getErrorMsg());
+        respDTO.setError(resp.isError());
+        respDTO.setErrorCode(resp.getErrorCode());
 
        return respDTO;
     }

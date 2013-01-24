@@ -38,7 +38,7 @@ public class OAuth2UserInfoEndpoint {
     @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
 
-    public Response issueUserInformation(@Context HttpServletRequest request, MultivaluedMap<String, String> paramMap) throws OAuthSystemException {
+    public Response getUserInformation(@Context HttpServletRequest request, MultivaluedMap<String, String> paramMap) throws OAuthSystemException {
 
         HttpServletRequestWrapper httpRequest = new OAuthUserInfoRequestWrapper(request, paramMap);
 
@@ -94,7 +94,6 @@ public class OAuth2UserInfoEndpoint {
             } else {
                 org.wso2.carbon.identity.oauth.ui.endpoints.userinfo.OAuthASResponse.OAuthUserInfoResponseBuilder response = org.wso2.carbon.identity.oauth.ui.endpoints.userinfo.OAuthASResponse.userInfoResponse(HttpServletResponse.SC_OK)
                         .setUserInfo(oAuth2UserInfoRespDTO.getAuthorizedUser());
-                ResponseHeader[] headers = oAuth2UserInfoRespDTO.getRespHeaders();
 
 
                 Response.ResponseBuilder respBuilder = Response
@@ -103,14 +102,6 @@ public class OAuth2UserInfoEndpoint {
                                 OAuthConstants.HTTP_RESP_HEADER_VAL_CACHE_CONTROL_NO_STORE)
                         .header(OAuthConstants.HTTP_RESP_HEADER_PRAGMA,
                                 OAuthConstants.HTTP_RESP_HEADER_VAL_PRAGMA_NO_CACHE);
-
-                if (headers != null && headers.length > 0) {
-                    for (int i = 0; i < headers.length; i++) {
-                        if (headers[i] != null) {
-                            respBuilder.header(headers[i].getKey(), headers[i].getValue());
-                        }
-                    }
-                }
 
                 return respBuilder.entity(response.getBody()).build();
             }

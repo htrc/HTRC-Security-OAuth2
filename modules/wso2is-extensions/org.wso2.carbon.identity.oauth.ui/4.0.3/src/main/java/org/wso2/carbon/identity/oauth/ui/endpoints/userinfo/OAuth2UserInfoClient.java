@@ -37,7 +37,7 @@ public class OAuth2UserInfoClient {
         try {
             OAuth2ServiceClient oauth2ServiceClient = new OAuth2ServiceClient(backendServerURL,
                     configContext);
-            return oauth2ServiceClient.issueUserInfo(userInfoReqDTO);
+            return oauth2ServiceClient.getUserInfo(userInfoReqDTO);
         } catch (Exception e){
             String errorMsg = "Error when invoking the OAuth2Service to get an access token.";
             log.error(errorMsg, e);

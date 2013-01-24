@@ -19,20 +19,6 @@ public class OAuth2UserInfoRespDTO {
 
     String errorCode;
 
-    ResponseHeader[] respHeaders;
-
-
-    public ResponseHeader[] getRespHeaders() {
-        if (respHeaders==null){
-            return new ResponseHeader[0];
-        }
-        return respHeaders;
-    }
-
-    public void setRespHeaders(ResponseHeader[] respHeaders) {
-        this.respHeaders = respHeaders;
-    }
-
 
     public String getAuthorizedUser() {
         return authorizedUser;

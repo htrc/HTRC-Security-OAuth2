@@ -185,20 +185,22 @@ public class OAuth2Service extends AbstractAdmin {
     /**
      * Issue user information by validating the access token.
      *
-     * @param userinfoReqDTO <Code>OAuth2UserInfoReqDTO</Code> representing the User Information request
+     * @param userInfoReqDTO <Code>OAuth2UserInfoReqDTO</Code> representing the User Information request
      * @return <Code>OAuth2UserInfoRespDTO</Code> representing the User Information response
      */
-    public OAuth2UserInfoRespDTO issueUserInformation(OAuth2UserInfoReqDTO userinfoReqDTO) {
+    public OAuth2UserInfoRespDTO getUserInformation(OAuth2UserInfoReqDTO userInfoReqDTO) {
 
         TokenMgtDAO tokenMgtDAO = new TokenMgtDAO();
         OAuth2UserInfoRespDTO userInfoRespDTO = new OAuth2UserInfoRespDTO();
 
-        String accessToken = userinfoReqDTO.getAccessToken();
-        String clientId = userinfoReqDTO.getClientId();
+        String accessToken = userInfoReqDTO.getAccessToken();
+        String clientId = userInfoReqDTO.getClientId();
 
         // incomplete user information request
         if (accessToken == null || clientId == null) {
             log.warn("Client Id or Access Token is not present");
+            userInfoRespDTO.setError(true);
+            userInfoRespDTO.setErrorCode(OAuth2ErrorCodes.INVALID_REQUEST);
             userInfoRespDTO.setErrorMsg("Client Id or Access Token is not present " +
                     "in the user information request.");
             return userInfoRespDTO;
@@ -232,6 +234,8 @@ public class OAuth2Service extends AbstractAdmin {
                 log.warn("Invalid Access Token or Client Id. " +
                         "Access Token : " + accessToken);
                 userInfoRespDTO.setErrorMsg("Invalid Access Token or Client Id.");
+                userInfoRespDTO.setError(true);
+                userInfoRespDTO.setErrorCode(OAuth2ErrorCodes.INVALID_REQUEST);
                 return userInfoRespDTO;
             }
 
@@ -251,7 +255,9 @@ public class OAuth2Service extends AbstractAdmin {
                             ", Timestamp Skew : " + timestampSkew +
                             ", Current Time : " + currentTimeInMillis);
                 }
+                userInfoRespDTO.setError(true);
                 userInfoRespDTO.setErrorMsg("Access Token is expired");
+                userInfoRespDTO.setErrorCode(OAuth2ErrorCodes.INVALID_REQUEST);
                 return userInfoRespDTO;
             }
 
