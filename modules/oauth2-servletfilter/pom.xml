@@ -40,6 +40,11 @@
             <version>1.6.0.wso2v4</version>
         </dependency>
         <dependency>
+            <groupId>edu.indiana.d2i.htrc</groupId>
+            <artifactId>htrc-auditor</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.gdata.wso2</groupId>
             <artifactId>gdata-core</artifactId>
             <version>1.0.0.wso2v1</version>
@@ -98,6 +103,11 @@
             <groupId>org.apache.ws.commons.axiom.wso2</groupId>
             <artifactId>axiom</artifactId>
             <version>${orbit.version.axiom}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.indiana.d2i.htrc.oauth2</groupId>
+            <artifactId>common</artifactId>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

@@ -32,7 +32,11 @@ import org.wso2.carbon.identity.oauth2.dto.xsd.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.dto.xsd.OAuth2TokenValidationResponseDTO;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import javax.net.ssl.*;
+import javax.servlet.ServletException;
 import java.rmi.RemoteException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 public class OAuth2ServiceClient {
     private OAuth2TokenValidationServiceStub stub;
