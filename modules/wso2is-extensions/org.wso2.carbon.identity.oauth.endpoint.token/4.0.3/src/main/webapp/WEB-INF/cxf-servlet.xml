@@ -28,6 +28,13 @@
             <ref bean="tokenEndpointBean"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
+    <jaxrs:server id="uinfoEP" address="/userinfo">
+        <jaxrs:serviceBeans>
+            <ref bean="userInfoEndpointBean"/>
+        </jaxrs:serviceBeans>
+    </jaxrs:server>
 
     <bean id="tokenEndpointBean" class="org.wso2.carbon.identity.oauth.endpoint.token.OAuth2TokenEndpoint"/>
+    <bean id="userInfoEndpointBean" class="org.wso2.carbon.identity.oauth.endpoint.userinfo.OAuth2UserInfoEndpoint"/>
+
 </beans>

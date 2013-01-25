@@ -1,6 +1,5 @@
-package org.wso2.carbon.identity.oauth.ui.endpoints.userinfo;
+package org.wso2.carbon.identity.oauth.endpoint.userinfo;
 
-import org.apache.amber.oauth2.as.request.OAuthTokenRequest;
 import org.apache.amber.oauth2.as.response.OAuthASResponse;
 import org.apache.amber.oauth2.common.OAuth;
 import org.apache.amber.oauth2.common.exception.OAuthSystemException;
@@ -10,12 +9,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
 import org.wso2.carbon.identity.oauth.ui.OAuthClientException;
 import org.wso2.carbon.identity.oauth.ui.OAuthConstants;
-import org.wso2.carbon.identity.oauth.ui.endpoints.token.OAuth2TokenClient;
-import org.wso2.carbon.identity.oauth.ui.endpoints.token.OAuthRequestWrapper;
 import org.wso2.carbon.identity.oauth.ui.util.OAuthUIUtil;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoRespDTO;
-import org.wso2.carbon.identity.oauth2.stub.types.ResponseHeader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -86,14 +81,14 @@ public class OAuth2UserInfoEndpoint {
                     return handleBasicAuthFailure();
                 }
                 // Otherwise send back HTTP 400 Status Code
-                OAuthResponse response = org.wso2.carbon.identity.oauth.ui.endpoints.userinfo.OAuthResponse.errorResponse(
+                OAuthResponse response = OAuthResponse.errorResponse(
                         HttpServletResponse.SC_BAD_REQUEST).setError(
                         oAuth2UserInfoRespDTO.getErrorCode()).setErrorDescription(
                         oAuth2UserInfoRespDTO.getErrorMsg()).buildJSONMessage();
                 return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
             } else {
-                org.wso2.carbon.identity.oauth.ui.endpoints.userinfo.OAuthASResponse.OAuthUserInfoResponseBuilder response = org.wso2.carbon.identity.oauth.ui.endpoints.userinfo.OAuthASResponse.userInfoResponse(HttpServletResponse.SC_OK)
-                        .setUserInfo(oAuth2UserInfoRespDTO.getAuthorizedUser());
+                OAuthResponse response = OAuthUserInfoResponse.userInfoResponse(HttpServletResponse.SC_OK)
+                        .setAuthroizedUser(oAuth2UserInfoRespDTO.getAuthorizedUser()).buildJSONMessage();
 
 
                 Response.ResponseBuilder respBuilder = Response

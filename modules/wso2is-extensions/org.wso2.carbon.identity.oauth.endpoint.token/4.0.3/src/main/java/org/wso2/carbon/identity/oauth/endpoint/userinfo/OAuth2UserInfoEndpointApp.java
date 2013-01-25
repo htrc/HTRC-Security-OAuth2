@@ -1,6 +1,4 @@
-package org.wso2.carbon.identity.oauth.ui.endpoints.userinfo;
-
-import org.wso2.carbon.identity.oauth.ui.endpoints.token.OAuth2TokenEndpoint;
+package org.wso2.carbon.identity.oauth.endpoint.userinfo;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package org.wso2.carbon.identity.oauth.ui.endpoints.userinfo;
+package org.wso2.carbon.identity.oauth.endpoint.userinfo;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;

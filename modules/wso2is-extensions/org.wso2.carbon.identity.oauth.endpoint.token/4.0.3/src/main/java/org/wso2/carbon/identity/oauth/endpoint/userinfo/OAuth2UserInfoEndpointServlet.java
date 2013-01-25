@@ -1,9 +1,8 @@
-package org.wso2.carbon.identity.oauth.ui.endpoints.userinfo;
+package org.wso2.carbon.identity.oauth.endpoint.userinfo;
 
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.apache.cxf.jaxrs.utils.ResourceUtils;
-import org.wso2.carbon.identity.oauth.ui.endpoints.token.OAuth2EndpointApp;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
