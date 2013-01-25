@@ -4,13 +4,20 @@
     <list default="true" readonly="true" id="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" name="Default" comment="">
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security/oauth2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuth2Client.java" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoRequest.java" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoResponse.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/resources/OAuth2TokenValidationService.wsdl" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client-app.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client-app.ipr" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client-app.iws" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="client-app.iws" />
     <ignored path=".idea/workspace.xml" />
