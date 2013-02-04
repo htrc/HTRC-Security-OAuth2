@@ -346,8 +346,9 @@ public class TokenMgtDAO {
                 String[] scope = OAuth2Util.buildScopeArray(resultSet.getString(2));
                 Timestamp timestamp = resultSet.getTimestamp(3,
                         Calendar.getInstance(TimeZone.getTimeZone("UTC")));
-                long validityPeriod = resultSet.getLong(4);
-                dataDO = new AccessTokenDO(authorizedUser, scope, timestamp, validityPeriod);
+                String clientId = resultSet.getString(4);
+                long validityPeriod = resultSet.getLong(5);
+                dataDO = new AccessTokenDO(authorizedUser, clientId, scope, timestamp, validityPeriod);
             }
 
         } catch (IdentityException e) {

@@ -76,6 +76,7 @@ public class ClientCredentialsGrantHandler extends AbstractAuthorizationGrantHan
         validityPeriod = validityPeriod * 1000;
 
         AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(),
+                oAuth2AccessTokenReqDTO.getClientId(),
                 tokReqMsgCtx.getScope(), timestamp, validityPeriod);
         accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
 

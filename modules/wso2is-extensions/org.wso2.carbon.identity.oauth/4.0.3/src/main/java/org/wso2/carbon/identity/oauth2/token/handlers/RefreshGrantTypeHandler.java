@@ -119,7 +119,7 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
         String preprocessedRefreshToken = tokenPersistencePreprocessor
                 .getPreprocessedToken(refreshToken);
 
-        AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(),
+        AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(), oauth2AccessTokenReqDTO.getClientId(),
                 tokReqMsgCtx.getScope(), timestamp, validityPeriod);
         accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
         accessTokenDO.setRefreshToken(preprocessedRefreshToken);

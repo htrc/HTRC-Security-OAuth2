@@ -2,25 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security/oauth2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuth2Client.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoResponse.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client-app.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client-app.ipr" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client-app.iws" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client-app.iml" afterPath="$PROJECT_DIR$/client-app.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client-app.ipr" afterPath="$PROJECT_DIR$/client-app.ipr" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client-app.iws" afterPath="$PROJECT_DIR$/client-app.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="client-app.iws" />
     <ignored path=".idea/workspace.xml" />
+    <file path="/pom.xml" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1359993471409" ignored="false" />
+    <file path="$PROJECT_DIR$/../wso2is-extensions/org.wso2.carbon.identity.oauth/4.0.3/src/main/java/org/wso2/carbon/identity/oauth2/dto/OAuth2TokenValidationResponseDTO.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1359996627130" ignored="false" />
+    <file path="$PROJECT_DIR$/../wso2is-extensions/org.wso2.carbon.identity.oauth/4.0.3/src/main/java/org/wso2/carbon/identity/oauth2/dto/OAuth2TokenValidationRequestDTO.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1359996602454" ignored="false" />
+    <file path="$PROJECT_DIR$/../wso2is-extensions/org.wso2.carbon.identity.oauth/4.0.3/src/main/java/org/wso2/carbon/identity/oauth2/validators/BearerTokenValidator.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1359997214037" ignored="false" />
+    <file path="/BearerTokenValidator.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1359997212149" ignored="false" />
+    <file path="$PROJECT_DIR$/../wso2is-extensions/org.wso2.carbon.identity.oauth/4.0.3/src/main/java/org/wso2/carbon/identity/oauth2/model/AccessTokenDO.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1359997166935" ignored="false" />
+    <file path="/AccessTokenDO.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1359997166935" ignored="false" />
+    <file path="$PROJECT_DIR$/../oauth2-servletfilter/pom.xml" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1359999059340" ignored="false" />
+    <file path="$PROJECT_DIR$/../wso2is-extensions/org.wso2.carbon.identity.oauth/4.0.3/src/main/java/org/wso2/carbon/identity/oauth2/authz/handlers/TokenResponseTypeHandler.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000346714" ignored="false" />
+    <file path="/TokenResponseTypeHandler.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000342372" ignored="false" />
+    <file path="$PROJECT_DIR$/../wso2is-extensions/org.wso2.carbon.identity.oauth/4.0.3/src/main/java/org/wso2/carbon/identity/oauth2/token/handlers/ClientCredentialsGrantHandler.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000385578" ignored="false" />
+    <file path="/ClientCredentialsGrantHandler.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000361699" ignored="false" />
+    <file path="$PROJECT_DIR$/../wso2is-extensions/org.wso2.carbon.identity.oauth/4.0.3/src/main/java/org/wso2/carbon/identity/oauth2/token/handlers/AbstractAuthorizationGrantHandler.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000564897" ignored="false" />
+    <file path="/AbstractAuthorizationGrantHandler.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000561280" ignored="false" />
+    <file path="$PROJECT_DIR$/../wso2is-extensions/org.wso2.carbon.identity.oauth/4.0.3/src/main/java/org/wso2/carbon/identity/oauth2/token/handlers/RefreshGrantTypeHandler.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000595648" ignored="false" />
+    <file path="/RefreshGrantTypeHandler.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000593185" ignored="false" />
+    <file path="$PROJECT_DIR$/../wso2is-extensions/org.wso2.carbon.identity.oauth/4.0.3/src/main/java/org/wso2/carbon/identity/oauth2/dao/SQLQueries.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000747653" ignored="false" />
+    <file path="$PROJECT_DIR$/../wso2is-extensions/org.wso2.carbon.identity.oauth/4.0.3/src/main/java/org/wso2/carbon/identity/oauth2/dao/TokenMgtDAO.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000854455" ignored="false" />
+    <file path="/TokenMgtDAO.java" changelist="c8c34b56-3e08-4f1a-9350-b60fa55a9c78" time="1360000853287" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,9 +117,9 @@
   <component name="DebuggerManager">
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <exception_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <field_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <method_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <breakpoint_any>
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
         <option name="NOTIFY_UNCAUGHT" value="true" />
@@ -146,6 +153,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <method_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -217,13 +225,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="OAuth2Client.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="OAuth2Client.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuth2Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="13" selection-start="455" selection-end="455" vertical-scroll-proportion="0.23751523">
+            <state line="15" column="70" selection-start="567" selection-end="567" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#747#763#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -232,7 +239,7 @@
       <file leaf-file-name="OAuthUserInfoRequest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoRequest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="87" selection-start="770" selection-end="770" vertical-scroll-proportion="0.0">
+            <state line="27" column="0" selection-start="770" selection-end="770" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -240,13 +247,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OAuthUserInfoResponse.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="OAuthUserInfoResponse.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoResponse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="13" selection-start="530" selection-end="530" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="35" column="82" selection-start="1293" selection-end="1293" vertical-scroll-proportion="0.51282054">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -254,7 +259,7 @@
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="13" column="31" selection-start="506" selection-end="506" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -279,6 +284,7 @@
         <option value="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuth2Client.java" />
         <option value="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoRequest.java" />
         <option value="$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoResponse.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
@@ -357,6 +363,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -422,7 +429,6 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="ProjectViewSettings">
@@ -434,11 +440,15 @@
     <view id="ClasspathPane" />
   </component>
   <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Project" />
     <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="project.structure.proportion" value="0.0" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="MemberChooser.sorted" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../oauth2-servletfilter" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="project.structure.side.proportion" value="0.0" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="MemberChooser.copyJavadoc" value="false" />
   </component>
@@ -586,35 +596,35 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="22" width="1900" height="967" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32979977" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973032" sideWeight="0.6702002" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32979977" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -726,6 +736,15 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuth2Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="13" selection-start="455" selection-end="455" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoRequest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="87" selection-start="770" selection-end="770" vertical-scroll-proportion="0.0">
@@ -738,9 +757,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoResponse.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="13" selection-start="530" selection-end="530" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -751,16 +768,112 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="31" selection-start="506" selection-end="506" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuth2Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="13" selection-start="455" selection-end="455" vertical-scroll-proportion="0.23751523">
+        <state line="15" column="70" selection-start="567" selection-end="567" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#747#763#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="0" selection-start="770" selection-end="770" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/htrc/security/oauth2/client/OAuthUserInfoResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="82" selection-start="1293" selection-end="1293" vertical-scroll-proportion="0.51282054">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>client-app</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.5" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
 

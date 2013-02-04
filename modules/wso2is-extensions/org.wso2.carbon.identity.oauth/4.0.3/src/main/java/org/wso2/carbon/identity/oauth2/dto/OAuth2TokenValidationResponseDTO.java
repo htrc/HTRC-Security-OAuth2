@@ -32,6 +32,8 @@ public class OAuth2TokenValidationResponseDTO {
     private boolean valid;
 
     private String errorMsg;
+
+    private String clientId;
     
     private String jwt;   
 
@@ -82,4 +84,13 @@ public class OAuth2TokenValidationResponseDTO {
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
     }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
 }

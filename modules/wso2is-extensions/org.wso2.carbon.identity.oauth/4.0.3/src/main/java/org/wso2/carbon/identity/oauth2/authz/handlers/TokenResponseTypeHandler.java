@@ -72,6 +72,7 @@ public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
         validityPeriod = validityPeriod * 1000;
 
         AccessTokenDO accessTokenDO = new AccessTokenDO(authorizationReqDTO.getUsername(),
+                authorizationReqDTO.getConsumerKey(),
                 oauthAuthzMsgCtx.getApprovedScope(), timestamp, validityPeriod);
         accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
 

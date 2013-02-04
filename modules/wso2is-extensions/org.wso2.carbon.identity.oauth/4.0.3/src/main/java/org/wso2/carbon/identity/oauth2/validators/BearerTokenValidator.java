@@ -57,7 +57,7 @@ public class BearerTokenValidator implements OAuth2TokenValidator {
         if (accessToken == null) {
             log.warn("Access Token is not present in the validation request.");
             tokenRespDTO.setValid(false);
-            tokenRespDTO.setErrorMsg("Client Id or Access Token is not present " +
+            tokenRespDTO.setErrorMsg("Access Token is not present " +
                     "in the validation request.");
             return tokenRespDTO;
         }
@@ -87,10 +87,10 @@ public class BearerTokenValidator implements OAuth2TokenValidator {
 
         // if the access token or client id is not valid
         if (accessTokenDO == null) {
-            log.warn("Invalid Access Token or Client Id. " +
+            log.warn("Invalid Access Token." +
                     "Access Token : " + accessToken);
             tokenRespDTO.setValid(false);
-            tokenRespDTO.setErrorMsg("Invalid Access Token or Client Id.");
+            tokenRespDTO.setErrorMsg("Invalid Access Token");
             return tokenRespDTO;
         }
 
@@ -117,6 +117,7 @@ public class BearerTokenValidator implements OAuth2TokenValidator {
 
         tokenRespDTO.setValid(true);
         tokenRespDTO.setAuthorizedUser(accessTokenDO.getAuthzUser());
+        tokenRespDTO.setClientId(accessTokenDO.getClientId());
         tokenRespDTO.setExpiryTime(validityPeriodInMillis / 1000);
         tokenRespDTO.setScope(accessTokenDO.getScope());
 
