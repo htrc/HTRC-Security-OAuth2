@@ -22,9 +22,9 @@
 package edu.indiana.d2i.htrc.oauth2.filter;
 
 
-import edu.indiana.d2i.htrc.audit.Auditor;
-import edu.indiana.d2i.htrc.audit.AuditorFactory;
-import edu.indiana.d2i.htrc.oauth2.common.ContextExtractor;
+//import edu.indiana.d2i.htrc.audit.Auditor;
+//import edu.indiana.d2i.htrc.audit.AuditorFactory;
+//import edu.indiana.d2i.htrc.oauth2.common.ContextExtractor;
 import org.apache.amber.oauth2.common.OAuth;
 import org.apache.amber.oauth2.common.error.OAuthError;
 import org.apache.amber.oauth2.common.exception.OAuthProblemException;
@@ -96,8 +96,8 @@ public class OAuth2Filter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
-        ContextExtractor contextExtractor = new ContextExtractor(req, null);
-        Auditor auditor = AuditorFactory.getAuditor(contextExtractor.getContextMap());
+        //ContextExtractor contextExtractor = new ContextExtractor(req, null);
+        //Auditor auditor = AuditorFactory.getAuditor(contextExtractor.getContextMap());
 
         SSLContext sc;
         // Get SSL context
@@ -146,7 +146,7 @@ public class OAuth2Filter implements Filter {
             OAuthAccessResourceRequest accessResourceRequest = new OAuthAccessResourceRequest(req, TokenType.BEARER);
             accessToken = accessResourceRequest.getAccessToken();
 
-            auditor.log("UNAUTHENTICATED_REQUEST", accessToken);
+            //auditor.log("UNAUTHENTICATED_REQUEST", accessToken);
 
             OAuth2ServiceClient client = new OAuth2ServiceClient(providerUrl, userName, password);
             OAuth2TokenValidationRequestDTO oauthReq = new OAuth2TokenValidationRequestDTO();
@@ -160,16 +160,16 @@ public class OAuth2Filter implements Filter {
             // Need improvements to IS API.
         } catch (OAuthProblemException e) {
             log.error("OAuth exception.", e);
-            auditor.error("OAuthProblemException", accessToken, e.getError(), e.getMessage());
+            //auditor.error("OAuthProblemException", accessToken, e.getError(), e.getMessage());
             respondWithError(res, e);
         } catch (OAuthSystemException e) {
             log.error("OAuth system exeception.", e);
-            auditor.error("OAuthSystemException", accessToken, e.getMessage());
+            //auditor.error("OAuthSystemException", accessToken, e.getMessage());
             throw new ServletException(e);
         } catch (RemoteException re) {
             re.printStackTrace();
             log.error("Error occurred during token validation.", re);
-            auditor.error("Error occurred during token validation.", accessToken, re.getMessage());
+            //auditor.error("Error occurred during token validation.", accessToken, re.getMessage());
             throw new ServletException("Error occurred during token validation.", re);
         }
 
