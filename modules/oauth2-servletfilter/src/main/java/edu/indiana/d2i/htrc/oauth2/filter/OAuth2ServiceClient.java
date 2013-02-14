@@ -64,6 +64,10 @@ public class OAuth2ServiceClient {
         OAuth2TokenValidationResponseDTO resp = stub.validate(params);
         System.out.println(resp);
         if(!resp.getValid()){
+            if (resp.getErrorMsg().contains("expired")){
+                throw OAuthProblemException.error(OAuthError.ResourceResponse.EXPIRED_TOKEN);
+            }
+
             throw  OAuthProblemException.error(OAuthError.ResourceResponse.INVALID_TOKEN);
         }
     }

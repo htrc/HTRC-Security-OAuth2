@@ -43,6 +43,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -60,8 +61,8 @@ public class OAuth2Filter implements Filter {
     private String userName;
     private String password;
     private String realm;
-    private String trustStore;
-    private String trustStorePassword;
+//    private String trustStore;
+//    private String trustStorePassword;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         providerUrl = filterConfig.getInitParameter(OAUTH2_PROVIDER_URL);
@@ -81,13 +82,13 @@ public class OAuth2Filter implements Filter {
             throw new RuntimeException("Cannot find OAuth2 provider password in filter configuration!");
         }
 
-        trustStore = filterConfig.getInitParameter(TRUST_STORE);
-        trustStorePassword = filterConfig.getInitParameter(TRUST_STORE_PASSWORD);
-
-        if(trustStore != null && trustStorePassword != null){
-            System.setProperty(TRUST_STORE, trustStore);
-            System.setProperty(TRUST_STORE_PASSWORD, trustStorePassword);
-        }
+//        trustStore = filterConfig.getInitParameter(TRUST_STORE);
+//        trustStorePassword = filterConfig.getInitParameter(TRUST_STORE_PASSWORD);
+//
+//        if(trustStore != null && trustStorePassword != null){
+//            System.setProperty(TRUST_STORE, trustStore);
+//            System.setProperty(TRUST_STORE_PASSWORD, trustStorePassword);
+//        }
 
         realm = filterConfig.getInitParameter(OAUTH2_RESOURCE_REALM);
     }
@@ -206,11 +207,19 @@ public class OAuth2Filter implements Filter {
                         .setError(error.getError())
                         .setErrorDescription(error.getDescription())
                         .setErrorUri(error.getUri())
-                        .buildHeaderMessage();
+                        .buildBodyMessage();
             }
             resp.addHeader(OAuth.HeaderType.WWW_AUTHENTICATE,
                     oauthResponse.getHeader(OAuth.HeaderType.WWW_AUTHENTICATE));
-            resp.sendError(oauthResponse.getResponseStatus());
+            //resp.sendError(oauthResponse.getResponseStatus());
+            resp.setContentType("application/json");
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            resp.getWriter().println(oauthResponse.getBody());
+//            PrintWriter out = resp.getWriter();
+//            out.print(oauthResponse.getBody());
+//            //out.print(oauthResponse.getResponseStatus());
+//            out.flush();
+//            resp.sendError(oauthResponse.getResponseStatus());
         } catch (OAuthSystemException e) {
             throw new ServletException(e);
         }
