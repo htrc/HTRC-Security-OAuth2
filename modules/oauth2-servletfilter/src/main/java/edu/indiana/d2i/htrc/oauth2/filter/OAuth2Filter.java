@@ -163,6 +163,7 @@ public class OAuth2Filter implements Filter {
             log.error("OAuth exception.", e);
             //auditor.error("OAuthProblemException", accessToken, e.getError(), e.getMessage());
             respondWithError(res, e);
+            return;
         } catch (OAuthSystemException e) {
             log.error("OAuth system exeception.", e);
             //auditor.error("OAuthSystemException", accessToken, e.getMessage());
@@ -212,7 +213,7 @@ public class OAuth2Filter implements Filter {
             resp.addHeader(OAuth.HeaderType.WWW_AUTHENTICATE,
                     oauthResponse.getHeader(OAuth.HeaderType.WWW_AUTHENTICATE));
             //resp.sendError(oauthResponse.getResponseStatus());
-            resp.setContentType("application/json");
+            resp.setContentType("text/html");
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             resp.getWriter().println(oauthResponse.getBody());
 //            PrintWriter out = resp.getWriter();
