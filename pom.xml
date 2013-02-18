@@ -41,9 +41,10 @@
             <modules>
                 <!--  commented out amber module as we have already deployed it into our own archiva repository -->
                 <!-- module>modules/dependencies/amber</module -->
-                <module>modules/oauth2-common</module>
-                <module>modules/oauth2-server</module>
-                <module>modules/oauth2-filter</module>
+                <module>modules/oauth2-client</module>
+                <module>modules/oauth2-servletfilter</module>
+                <module>modules/oauth2-userinfo</module>
+		<module>modules/wso2is-extensions</module>
             </modules>
         </profile>
     </profiles>
