@@ -22,9 +22,11 @@
 package edu.indiana.d2i.htrc.oauth2.filter;
 
 
-//import edu.indiana.d2i.htrc.audit.Auditor;
-//import edu.indiana.d2i.htrc.audit.AuditorFactory;
+import edu.indiana.d2i.htrc.audit.Auditor;
+import edu.indiana.d2i.htrc.audit.AuditorFactory;
 //import edu.indiana.d2i.htrc.oauth2.common.ContextExtractor;
+//import edu.indiana.d2i.htrc.oauth2.common.ContextExtractor;
+//import edu.indiana.d2i.htrc.oauth2.common.TokenStore;
 import org.apache.amber.oauth2.common.OAuth;
 import org.apache.amber.oauth2.common.error.OAuthError;
 import org.apache.amber.oauth2.common.exception.OAuthProblemException;
@@ -36,7 +38,9 @@ import org.apache.amber.oauth2.rs.request.OAuthAccessResourceRequest;
 import org.apache.amber.oauth2.rs.response.OAuthRSResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.PropertyConfigurator;
 import org.wso2.carbon.identity.oauth2.dto.xsd.OAuth2TokenValidationRequestDTO;
+import org.wso2.carbon.identity.oauth2.dto.xsd.OAuth2TokenValidationResponseDTO;
 
 import javax.net.ssl.*;
 import javax.servlet.*;
@@ -47,6 +51,9 @@ import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class OAuth2Filter implements Filter {
     private static Log log = LogFactory.getLog(OAuth2Filter.class);
@@ -55,32 +62,54 @@ public class OAuth2Filter implements Filter {
     public static final String OAUTH2_PROVIDER_USERS = "oauth2.provider.user";
     public static final String OAUTH2_PROVIDER_PASSWORD = "oauth2.provider.password";
     public static final String OAUTH2_RESOURCE_REALM = "oauth2.resource.realm";
-    public static final String TRUST_STORE = "javax.net.ssl.trustStore";
-    public static final String TRUST_STORE_PASSWORD = "javax.net.ssl.trustStorePassword";
+    //public static final String TRUST_STORE = "javax.net.ssl.trustStore";
+    //public static final String TRUST_STORE_PASSWORD = "javax.net.ssl.trustStorePassword";
+//    public static final String PN_DSNAME = "ds.name";
+    public static final String PN_LOG4J_PROPERTIES_PATH = "log4j.properties.path";
+    public static final String PN_AUDITOR_CLASS = "auditor.class";
+
     private String providerUrl;
     private String userName;
     private String password;
     private String realm;
 //    private String trustStore;
 //    private String trustStorePassword;
+    protected FilterConfig config;
+    //protected TokenStore tokenStore;
+    protected AuditorFactory auditorFactory;
+
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        providerUrl = filterConfig.getInitParameter(OAUTH2_PROVIDER_URL);
-        if(providerUrl == null || providerUrl.isEmpty()){
-            log.error("Cannot find OAuth2 provider URL in filter configuration!");
-            throw new RuntimeException("Cannot find OAuth2 provider URL in filter configuration!");
-        }
-        userName = filterConfig.getInitParameter(OAUTH2_PROVIDER_USERS);
-        if(userName == null || userName.isEmpty()){
-            log.error("Cannot find OAuth2 provider username in filter configuration!");
-            throw new RuntimeException("Cannot find OAuth2 provider username in filter configuration!");
-        }
 
-        password = filterConfig.getInitParameter(OAUTH2_PROVIDER_PASSWORD);
-        if(password == null || password.isEmpty()){
-            log.error("Cannot find OAuth2 provider password in filter configuration!");
-            throw new RuntimeException("Cannot find OAuth2 provider password in filter configuration!");
-        }
+        try {
+            config = filterConfig;
+//            String dsName = config.getInitParameter(PN_DSNAME);
+            String log4jPath = config.getInitParameter(PN_LOG4J_PROPERTIES_PATH);
+            AuditorFactory.init(config.getInitParameter(PN_AUDITOR_CLASS));
+            auditorFactory = new AuditorFactory();
+
+            if (log4jPath != null) {
+                PropertyConfigurator.configure(log4jPath);
+
+            }
+
+
+            providerUrl = filterConfig.getInitParameter(OAUTH2_PROVIDER_URL);
+            if(providerUrl == null || providerUrl.isEmpty()){
+                log.error("Cannot find OAuth2 provider URL in filter configuration!");
+                throw new RuntimeException("Cannot find OAuth2 provider URL in filter configuration!");
+            }
+            userName = filterConfig.getInitParameter(OAUTH2_PROVIDER_USERS);
+            if(userName == null || userName.isEmpty()){
+                log.error("Cannot find OAuth2 provider username in filter configuration!");
+                throw new RuntimeException("Cannot find OAuth2 provider username in filter configuration!");
+            }
+
+            password = filterConfig.getInitParameter(OAUTH2_PROVIDER_PASSWORD);
+            if(password == null || password.isEmpty()){
+                log.error("Cannot find OAuth2 provider password in filter configuration!");
+                throw new RuntimeException("Cannot find OAuth2 provider password in filter configuration!");
+            }
 
 //        trustStore = filterConfig.getInitParameter(TRUST_STORE);
 //        trustStorePassword = filterConfig.getInitParameter(TRUST_STORE_PASSWORD);
@@ -90,15 +119,21 @@ public class OAuth2Filter implements Filter {
 //            System.setProperty(TRUST_STORE_PASSWORD, trustStorePassword);
 //        }
 
-        realm = filterConfig.getInitParameter(OAUTH2_RESOURCE_REALM);
+            realm = filterConfig.getInitParameter(OAUTH2_RESOURCE_REALM);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new ServletException(e);
+        }
+
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
-        //ContextExtractor contextExtractor = new ContextExtractor(req, null);
-        //Auditor auditor = AuditorFactory.getAuditor(contextExtractor.getContextMap());
+        ContextExtractor contextExtractor = new ContextExtractor(req, null);
+        Auditor auditor = AuditorFactory.getAuditor(contextExtractor.getContextMap());
 
         SSLContext sc;
         // Get SSL context
@@ -143,11 +178,12 @@ public class OAuth2Filter implements Filter {
         HttpsURLConnection.setDefaultHostnameVerifier(hv);
 
         String accessToken = null;
+        OAuth2TokenValidationResponseDTO responseDTO = null;
         try {
             OAuthAccessResourceRequest accessResourceRequest = new OAuthAccessResourceRequest(req, TokenType.BEARER);
             accessToken = accessResourceRequest.getAccessToken();
 
-            //auditor.log("UNAUTHENTICATED_REQUEST", accessToken);
+            auditor.log("REQUEST_RECEIVED", accessToken);
 
             OAuth2ServiceClient client = new OAuth2ServiceClient(providerUrl, userName, password);
             OAuth2TokenValidationRequestDTO oauthReq = new OAuth2TokenValidationRequestDTO();
@@ -157,24 +193,32 @@ public class OAuth2Filter implements Filter {
             // Need to fix this to return user information (reverse lookup)
             client.validateAuthenticationRequest(oauthReq);
 
+
             // Need to add extra information about client which does the request.
             // Need improvements to IS API.
         } catch (OAuthProblemException e) {
             log.error("OAuth exception.", e);
-            //auditor.error("OAuthProblemException", accessToken, e.getError(), e.getMessage());
+            auditor.log("UNAUTHENTICATED_REQUEST", accessToken);
+            auditor.error("OAuthProblemException", accessToken, e.getError(), e.getMessage());
             respondWithError(res, e);
             return;
         } catch (OAuthSystemException e) {
             log.error("OAuth system exeception.", e);
-            //auditor.error("OAuthSystemException", accessToken, e.getMessage());
+            auditor.log("UNAUTHENTICATED_REQUEST", accessToken);
+            auditor.error("OAuthSystemException", accessToken, e.getMessage());
             throw new ServletException(e);
         } catch (RemoteException re) {
             re.printStackTrace();
             log.error("Error occurred during token validation.", re);
-            //auditor.error("Error occurred during token validation.", accessToken, re.getMessage());
+            auditor.log("UNAUTHENTICATED_REQUEST", accessToken);
+            auditor.error("Error occurred during token validation.", accessToken, re.getMessage());
             throw new ServletException("Error occurred during token validation.", re);
         }
-
+        List<String> n = new ArrayList<String>();
+        n.add(userName);
+        contextExtractor.contextMap.put("remoteuser", n);
+        auditor.audit("REQUEST_AUTHENTICATED", userName);
+        auditor.log("REQUEST_AUTHENTICATED", accessToken);
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

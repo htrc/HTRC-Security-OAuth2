@@ -59,7 +59,7 @@ public class OAuth2ServiceClient {
         options.setManageSession(true);
     }
 
-    public void validateAuthenticationRequest(OAuth2TokenValidationRequestDTO params)
+    public OAuth2TokenValidationResponseDTO validateAuthenticationRequest(OAuth2TokenValidationRequestDTO params)
             throws OAuthProblemException, RemoteException {
         OAuth2TokenValidationResponseDTO resp = stub.validate(params);
         System.out.println(resp);
@@ -70,5 +70,6 @@ public class OAuth2ServiceClient {
 
             throw  OAuthProblemException.error(OAuthError.ResourceResponse.INVALID_TOKEN);
         }
+        return resp;
     }
 }
