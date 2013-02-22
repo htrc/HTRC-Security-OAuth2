@@ -6,13 +6,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
-
 import org.apache.log4j.Logger;
 
 public class ContextExtractor {
@@ -21,14 +17,10 @@ public class ContextExtractor {
 
     protected final Map<String, List<String>> contextMap;
 
-    public ContextExtractor(HttpServletRequest httpServletRequest, HttpHeaders httpHeaders) {
+    public ContextExtractor(HttpServletRequest httpServletRequest) {
         contextMap = new HashMap<String, List<String>>();
         extractFromRequest(contextMap, httpServletRequest);
-        if (httpHeaders != null) {
-            extractFromHeaders(contextMap, httpHeaders);
-        } else {
-            extractHeadersFromRequest(contextMap, httpServletRequest);
-        }
+        extractHeadersFromRequest(contextMap, httpServletRequest);
     }
 
     public List<String> getContext(String key) {
@@ -81,37 +73,6 @@ public class ContextExtractor {
     }
 
 
-    protected void extractFromHeaders(Map<String, List<String>> map, HttpHeaders httpHeaders) {
-        if (httpHeaders != null) {
-            MultivaluedMap<String, String> requestHeaders = httpHeaders.getRequestHeaders();
-            Set<String> keySet = requestHeaders.keySet();
-            for (String key : keySet) {
-                List<String> list = requestHeaders.get(key.toLowerCase());
-                if (list != null && !list.isEmpty()) {
-                    if (log.isDebugEnabled()) {
-                        StringBuilder builder = new StringBuilder(key);
-                        builder.append(":");
-                        for (String string : list) {
-                            builder.append(string).append(" ");
-                        }
-                        log.debug(builder.toString());
-                    }
-
-                    List<String> list2 = map.get(key);
-                    if (list2 == null) {
-                        list2 = new ArrayList<String>(list);
-                        map.put(key.toLowerCase(), list2);
-                    } else {
-                        list2.addAll(list);
-                    }
-                } else {
-                    if (log.isDebugEnabled()) log.debug(key + ": null | empty");
-                }
-            }
-        }
-
-    }
-
     // the warning is due to raw Enumeration type returned from HttpServletRequest.getHeaderNames()
     @SuppressWarnings("unchecked")
     protected void extractHeadersFromRequest(Map<String, List<String>> map, HttpServletRequest httpServletRequest) {
@@ -145,4 +106,4 @@ public class ContextExtractor {
         }
         return list;
     }
-    }
+}

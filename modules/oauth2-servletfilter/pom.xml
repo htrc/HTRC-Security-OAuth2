@@ -104,11 +104,6 @@
             <artifactId>axiom</artifactId>
             <version>${orbit.version.axiom}</version>
         </dependency>
-        <dependency>
-            <groupId>edu.indiana.d2i.htrc.oauth2</groupId>
-            <artifactId>common</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <build>

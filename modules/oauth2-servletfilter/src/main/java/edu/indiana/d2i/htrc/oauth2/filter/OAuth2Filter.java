@@ -24,9 +24,6 @@ package edu.indiana.d2i.htrc.oauth2.filter;
 
 import edu.indiana.d2i.htrc.audit.Auditor;
 import edu.indiana.d2i.htrc.audit.AuditorFactory;
-//import edu.indiana.d2i.htrc.oauth2.common.ContextExtractor;
-//import edu.indiana.d2i.htrc.oauth2.common.ContextExtractor;
-//import edu.indiana.d2i.htrc.oauth2.common.TokenStore;
 import org.apache.amber.oauth2.common.OAuth;
 import org.apache.amber.oauth2.common.error.OAuthError;
 import org.apache.amber.oauth2.common.exception.OAuthProblemException;
@@ -62,20 +59,19 @@ public class OAuth2Filter implements Filter {
     public static final String OAUTH2_PROVIDER_USERS = "oauth2.provider.user";
     public static final String OAUTH2_PROVIDER_PASSWORD = "oauth2.provider.password";
     public static final String OAUTH2_RESOURCE_REALM = "oauth2.resource.realm";
-    //public static final String TRUST_STORE = "javax.net.ssl.trustStore";
-    //public static final String TRUST_STORE_PASSWORD = "javax.net.ssl.trustStorePassword";
-//    public static final String PN_DSNAME = "ds.name";
+    public static final String TRUST_STORE = "javax.net.ssl.trustStore";
+    public static final String TRUST_STORE_PASSWORD = "javax.net.ssl.trustStorePassword";
     public static final String PN_LOG4J_PROPERTIES_PATH = "log4j.properties.path";
     public static final String PN_AUDITOR_CLASS = "auditor.class";
+    public static final String KEY_REMOTE_USER = "remoteuser";
 
     private String providerUrl;
     private String userName;
     private String password;
     private String realm;
-//    private String trustStore;
-//    private String trustStorePassword;
+    private String trustStore;
+    private String trustStorePassword;
     protected FilterConfig config;
-    //protected TokenStore tokenStore;
     protected AuditorFactory auditorFactory;
 
 
@@ -83,7 +79,6 @@ public class OAuth2Filter implements Filter {
 
         try {
             config = filterConfig;
-//            String dsName = config.getInitParameter(PN_DSNAME);
             String log4jPath = config.getInitParameter(PN_LOG4J_PROPERTIES_PATH);
             AuditorFactory.init(config.getInitParameter(PN_AUDITOR_CLASS));
             auditorFactory = new AuditorFactory();
@@ -110,14 +105,14 @@ public class OAuth2Filter implements Filter {
                 log.error("Cannot find OAuth2 provider password in filter configuration!");
                 throw new RuntimeException("Cannot find OAuth2 provider password in filter configuration!");
             }
+        // Trust store can be used when WSO2 IS is deployed with self-signed certificates
+        trustStore = filterConfig.getInitParameter(TRUST_STORE);
+        trustStorePassword = filterConfig.getInitParameter(TRUST_STORE_PASSWORD);
 
-//        trustStore = filterConfig.getInitParameter(TRUST_STORE);
-//        trustStorePassword = filterConfig.getInitParameter(TRUST_STORE_PASSWORD);
-//
-//        if(trustStore != null && trustStorePassword != null){
-//            System.setProperty(TRUST_STORE, trustStore);
-//            System.setProperty(TRUST_STORE_PASSWORD, trustStorePassword);
-//        }
+        if(trustStore != null && trustStorePassword != null){
+            System.setProperty(TRUST_STORE, trustStore);
+            System.setProperty(TRUST_STORE_PASSWORD, trustStorePassword);
+        }
 
             realm = filterConfig.getInitParameter(OAUTH2_RESOURCE_REALM);
 
@@ -132,50 +127,8 @@ public class OAuth2Filter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
-        ContextExtractor contextExtractor = new ContextExtractor(req, null);
+        ContextExtractor contextExtractor = new ContextExtractor(req);
         Auditor auditor = AuditorFactory.getAuditor(contextExtractor.getContextMap());
-
-        SSLContext sc;
-        // Get SSL context
-        try {
-            sc = SSLContext.getInstance("SSL");
-        } catch (NoSuchAlgorithmException e) {
-            log.error("SSLContext.getInstance failed.", e);
-            throw new ServletException(e);
-        }
-        // Create empty HostnameVerifier
-        HostnameVerifier hv = new HostnameVerifier() {
-            public boolean verify(String urlHostName, SSLSession session) {
-                return true;
-            }
-        };
-
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            public void checkClientTrusted(java.security.cert.X509Certificate[] certs,
-                                           String authType) {
-            }
-
-            public void checkServerTrusted(java.security.cert.X509Certificate[] certs,
-                                           String authType) {
-            }
-        }};
-
-        try {
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        } catch (KeyManagementException e) {
-            log.error("SSLContext init error.", e);
-            throw new ServletException(e);
-        }
-
-        SSLSocketFactory sslSocketFactory = sc.getSocketFactory();
-
-        HttpsURLConnection.setDefaultSSLSocketFactory(sslSocketFactory);
-        HttpsURLConnection.setDefaultHostnameVerifier(hv);
 
         String accessToken = null;
         OAuth2TokenValidationResponseDTO responseDTO = null;
@@ -191,11 +144,16 @@ public class OAuth2Filter implements Filter {
             oauthReq.setTokenType("bearer");
 
             // Need to fix this to return user information (reverse lookup)
-            client.validateAuthenticationRequest(oauthReq);
+            responseDTO = client.validateAuthenticationRequest(oauthReq);
+            List<String> registered_user = new ArrayList<String>();
+            registered_user.add(responseDTO.getAuthorizedUser());
+            Map<String, List<String>> contextMap = contextExtractor.getContextMap();
+            contextMap.put(KEY_REMOTE_USER, registered_user);
+
+            auditor = AuditorFactory.getAuditor(contextMap);
+            auditor.log("REQUEST_AUTHENTICATED", accessToken);
 
 
-            // Need to add extra information about client which does the request.
-            // Need improvements to IS API.
         } catch (OAuthProblemException e) {
             log.error("OAuth exception.", e);
             auditor.log("UNAUTHENTICATED_REQUEST", accessToken);
@@ -214,11 +172,8 @@ public class OAuth2Filter implements Filter {
             auditor.error("Error occurred during token validation.", accessToken, re.getMessage());
             throw new ServletException("Error occurred during token validation.", re);
         }
-        List<String> n = new ArrayList<String>();
-        n.add(userName);
-        contextExtractor.contextMap.put("remoteuser", n);
-        auditor.audit("REQUEST_AUTHENTICATED", userName);
-        auditor.log("REQUEST_AUTHENTICATED", accessToken);
+
+
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
@@ -256,15 +211,10 @@ public class OAuth2Filter implements Filter {
             }
             resp.addHeader(OAuth.HeaderType.WWW_AUTHENTICATE,
                     oauthResponse.getHeader(OAuth.HeaderType.WWW_AUTHENTICATE));
-            //resp.sendError(oauthResponse.getResponseStatus());
             resp.setContentType("text/html");
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             resp.getWriter().println(oauthResponse.getBody());
-//            PrintWriter out = resp.getWriter();
-//            out.print(oauthResponse.getBody());
-//            //out.print(oauthResponse.getResponseStatus());
-//            out.flush();
-//            resp.sendError(oauthResponse.getResponseStatus());
+
         } catch (OAuthSystemException e) {
             throw new ServletException(e);
         }
