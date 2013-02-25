@@ -88,7 +88,12 @@ public class OAuth2UserInfoEndpoint {
                 return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
             } else {
                 OAuthResponse response = OAuthUserInfoResponse.userInfoResponse(HttpServletResponse.SC_OK)
-                        .setAuthroizedUser(oAuth2UserInfoRespDTO.getAuthorizedUser()).buildJSONMessage();
+                        .setAuthroizedUser(oAuth2UserInfoRespDTO.getAuthorizedUser())
+                        .setUserFullName(oAuth2UserInfoRespDTO.getUserFullName())
+                        .setUserEmail(oAuth2UserInfoRespDTO.getUserEmail())
+                        .buildJSONMessage();
+
+
 
 
                 Response.ResponseBuilder respBuilder = Response

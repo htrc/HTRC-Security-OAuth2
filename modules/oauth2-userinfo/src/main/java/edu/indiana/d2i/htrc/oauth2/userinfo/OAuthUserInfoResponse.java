@@ -21,6 +21,17 @@ public class OAuthUserInfoResponse extends OAuthResponse {
             this.parameters.put("authorized_user", authorizedUser);
             return this;
         }
+
+        public OAuthUserInfoResponseBuilder setUserFullName(java.lang.String userFullName){
+            this.parameters.put("user_fullname" , userFullName);
+            return this;
+        }
+
+        public OAuthUserInfoResponseBuilder setUserEmail(java.lang.String userEmail){
+            this.parameters.put("user_email" , userEmail);
+            return this;
+        }
+
     }
 }
 
