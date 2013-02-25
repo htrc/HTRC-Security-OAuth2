@@ -38,6 +38,9 @@ import org.wso2.carbon.identity.oauth2.dto.*;
 import org.wso2.carbon.identity.oauth2.model.AccessTokenDO;
 import org.wso2.carbon.identity.oauth2.token.AccessTokenIssuer;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
+import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.user.core.UserStoreManager;
 
 /**
  * OAuth2 Service which is used to issue authorization codes or access tokens upon authorizing by the
@@ -227,6 +230,13 @@ public class OAuth2Service extends AbstractAdmin {
             // Cache miss, load the access token info from the database.
             if (accessTokenDO == null) {
                 accessTokenDO = tokenMgtDAO.validateBearerToken(preprocessedAccessToken);
+                if (accessTokenDO != null){
+                    UserRealm ur = getUserRealm();
+                    UserStoreManager um = ur.getUserStoreManager();
+                    accessTokenDO.setUserFullName(um.getUserClaimValue(accessTokenDO.getAuthzUser(), "http://wso2.org/claims/givenname" , "default")
+                    + " "+ um.getUserClaimValue(accessTokenDO.getAuthzUser(),"http://wso2.org/claims/lastname" , "default"));
+                    accessTokenDO.setUserEmail(um.getUserClaimValue(accessTokenDO.getAuthzUser(), "http://wso2.org/claims/emailaddress", "default"));
+                }
             }
 
             // if the access token or client id is not valid
@@ -262,6 +272,8 @@ public class OAuth2Service extends AbstractAdmin {
             }
 
             userInfoRespDTO.setAuthorizedUser(accessTokenDO.getAuthzUser());
+            userInfoRespDTO.setUserFullName(accessTokenDO.getUserFullName());
+            userInfoRespDTO.setUserEmail(accessTokenDO.getUserEmail());
 
             // Add the token back to the cache in the case of a cache miss
             if (OAuthServerConfiguration.getInstance().isCacheEnabled() && !cacheHit) {
@@ -276,6 +288,10 @@ public class OAuth2Service extends AbstractAdmin {
         } catch (IdentityOAuth2Exception e) {
             log.error("Error when reading the Request Information.", e);
             userInfoRespDTO.setErrorMsg("Error when processing the user information request.");
+            return userInfoRespDTO;
+        } catch (UserStoreException e) {
+            log.error("Error when getting user information",e);
+            userInfoRespDTO.setErrorMsg("Error ahen getting user information");
             return userInfoRespDTO;
         }
 

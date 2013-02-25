@@ -2,16 +2,14 @@ package org.wso2.carbon.identity.oauth2.dto;
 
 import org.wso2.carbon.identity.oauth2.ResponseHeader;
 
-/**
- * Created with IntelliJ IDEA.
- * User: samitha
- * Date: 12/24/12
- * Time: 3:45 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class OAuth2UserInfoRespDTO {
 
     private String authorizedUser;
+
+    private String userFullName;
+
+    private String userEmail;
 
     private String errorMsg;
 
@@ -50,5 +48,21 @@ public class OAuth2UserInfoRespDTO {
 
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
+    }
+
+    public String getUserFullName() {
+        return userFullName;
+    }
+
+    public void setUserFullName(String userFullName) {
+        this.userFullName = userFullName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

@@ -112,6 +112,8 @@
                     <xs:element minOccurs="0" name="error" type="xs:boolean"/>
                     <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="userEmail" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="userFullName" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="OAuth2AuthorizeReqDTO">
