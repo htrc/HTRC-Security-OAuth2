@@ -126,6 +126,7 @@ public class OAuth2Filter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
+        OAuth2RequestWrapper modifiedRequest = new OAuth2RequestWrapper(req);
 
         ContextExtractor contextExtractor = new ContextExtractor(req);
         Auditor auditor = AuditorFactory.getAuditor(contextExtractor.getContextMap());
@@ -147,6 +148,7 @@ public class OAuth2Filter implements Filter {
             responseDTO = client.validateAuthenticationRequest(oauthReq);
             List<String> registered_user = new ArrayList<String>();
             registered_user.add(responseDTO.getAuthorizedUser());
+            modifiedRequest.setRemoteUser(responseDTO.getAuthorizedUser());
             Map<String, List<String>> contextMap = contextExtractor.getContextMap();
             contextMap.put(KEY_REMOTE_USER, registered_user);
 
@@ -174,7 +176,7 @@ public class OAuth2Filter implements Filter {
         }
 
 
-        filterChain.doFilter(servletRequest, servletResponse);
+        filterChain.doFilter(modifiedRequest, servletResponse);
     }
 
     public void destroy() {
