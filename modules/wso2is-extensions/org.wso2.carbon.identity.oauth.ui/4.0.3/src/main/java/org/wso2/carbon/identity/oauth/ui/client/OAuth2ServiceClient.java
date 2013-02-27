@@ -196,6 +196,8 @@ public class OAuth2ServiceClient {
         org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoRespDTO respDTO = new org.wso2.carbon.identity.oauth2.stub.dto.OAuth2UserInfoRespDTO();
 
         respDTO.setAuthorizedUser(resp.getAuthorizedUser());
+        respDTO.setUserFullName(resp.getUserFullName());
+        respDTO.setUserEmail(resp.getUserEmail());
         respDTO.setErrorMsg(resp.getErrorMsg());
         respDTO.setError(resp.isError());
         respDTO.setErrorCode(resp.getErrorCode());
