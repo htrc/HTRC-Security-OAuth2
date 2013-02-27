@@ -287,10 +287,12 @@ public class OAuth2Service extends AbstractAdmin {
             return userInfoRespDTO;
         } catch (IdentityOAuth2Exception e) {
             log.error("Error when reading the Request Information.", e);
+            userInfoRespDTO.setError(true);
             userInfoRespDTO.setErrorMsg("Error when processing the user information request.");
             return userInfoRespDTO;
         } catch (UserStoreException e) {
             log.error("Error when getting user information",e);
+            userInfoRespDTO.setError(true);
             userInfoRespDTO.setErrorMsg("Error ahen getting user information");
             return userInfoRespDTO;
         }
