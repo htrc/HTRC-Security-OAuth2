@@ -148,7 +148,13 @@ public class OAuth2Filter implements Filter {
             responseDTO = client.validateAuthenticationRequest(oauthReq);
             List<String> registered_user = new ArrayList<String>();
             registered_user.add(responseDTO.getAuthorizedUser());
-            modifiedRequest.setRemoteUser(responseDTO.getAuthorizedUser());
+            if (responseDTO.getAuthorizedUser() != null){
+                modifiedRequest.setRemoteUser(responseDTO.getAuthorizedUser());
+            }
+            else {
+                modifiedRequest.setRemoteUser(responseDTO.getClientId());
+            }
+
             Map<String, List<String>> contextMap = contextExtractor.getContextMap();
             contextMap.put(KEY_REMOTE_USER, registered_user);
 
