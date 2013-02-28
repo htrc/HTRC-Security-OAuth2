@@ -334,6 +334,13 @@ public class TokenMgtDAO {
         Connection connection = null;
         PreparedStatement prepStmt = null;
         ResultSet resultSet;
+        ResultSet consumerNameResultSet;
+        String clientId = null;
+        String authorizedUser = null;
+        String[] scope = null;
+        Timestamp timestamp = null;
+        long validityPeriod = 0;
+        String appName = null;
 
         try {
             connection = JDBCPersistenceManager.getInstance().getDBConnection();
@@ -342,14 +349,26 @@ public class TokenMgtDAO {
             resultSet = prepStmt.executeQuery();
 
             if (resultSet.next()) {
-                String authorizedUser = resultSet.getString(1);
-                String[] scope = OAuth2Util.buildScopeArray(resultSet.getString(2));
-                Timestamp timestamp = resultSet.getTimestamp(3,
+                authorizedUser = resultSet.getString(1);
+                scope = OAuth2Util.buildScopeArray(resultSet.getString(2));
+                timestamp = resultSet.getTimestamp(3,
                         Calendar.getInstance(TimeZone.getTimeZone("UTC")));
-                String clientId = resultSet.getString(4);
-                long validityPeriod = resultSet.getLong(5);
-                dataDO = new AccessTokenDO(authorizedUser, clientId, scope, timestamp, validityPeriod);
+                clientId = resultSet.getString(4);
+                validityPeriod = resultSet.getLong(5);
             }
+
+            IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
+            connection = JDBCPersistenceManager.getInstance().getDBConnection();
+            prepStmt = connection.prepareStatement(SQLQueries.FIND_CONSUMER_APP_NAME);
+            prepStmt.setString(1, clientId);
+            consumerNameResultSet = prepStmt.executeQuery();
+
+            if (consumerNameResultSet.next()){
+                appName = consumerNameResultSet.getString(1);
+
+
+            }
+            dataDO = new AccessTokenDO(authorizedUser, appName, scope, timestamp, validityPeriod);
 
         } catch (IdentityException e) {
             String errorMsg = "Error when getting an Identity Persistence Store instance.";
