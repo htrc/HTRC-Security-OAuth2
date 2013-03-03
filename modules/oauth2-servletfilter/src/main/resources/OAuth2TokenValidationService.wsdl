@@ -29,6 +29,7 @@
             </xs:complexType>
             <xs:complexType name="OAuth2TokenValidationResponseDTO">
                 <xs:sequence>
+                    <xs:element minOccurs="0" name="appName" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="authorizedUser" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="clientId" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string"/>

@@ -147,16 +147,25 @@ public class OAuth2Filter implements Filter {
             // Need to fix this to return user information (reverse lookup)
             responseDTO = client.validateAuthenticationRequest(oauthReq);
             List<String> registered_user = new ArrayList<String>();
+            List<String> client_ID = new ArrayList<String>();
+            List<String> app_name = new ArrayList<String>();
             registered_user.add(responseDTO.getAuthorizedUser());
+            client_ID.add(responseDTO.getClientId());
+            app_name.add(responseDTO.getAppName());
             if (responseDTO.getAuthorizedUser() != null){
                 modifiedRequest.setRemoteUser(responseDTO.getAuthorizedUser());
             }
             else {
-                modifiedRequest.setRemoteUser(responseDTO.getClientId());
+                modifiedRequest.setRemoteUser(responseDTO.getAppName());
             }
 
             Map<String, List<String>> contextMap = contextExtractor.getContextMap();
-            contextMap.put(KEY_REMOTE_USER, registered_user);
+            if (responseDTO.getAuthorizedUser() != null){
+                contextMap.put(KEY_REMOTE_USER, registered_user);
+            }else {
+                contextMap.put(KEY_REMOTE_USER, app_name);
+            }
+
 
             auditor = AuditorFactory.getAuditor(contextMap);
             auditor.log("REQUEST_AUTHENTICATED", accessToken);
