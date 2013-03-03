@@ -44,6 +44,7 @@ import org.wso2.carbon.user.api.UserStoreManager;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class AccessTokenIssuer {
@@ -95,7 +96,7 @@ public class AccessTokenIssuer {
     }
 
     public OAuth2AccessTokenRespDTO issue(OAuth2AccessTokenReqDTO tokenReqDTO)
-            throws IdentityException, InvalidOAuthClientException {
+            throws IdentityException, InvalidOAuthClientException, SQLException {
 
         String grantType = tokenReqDTO.getGrantType();
         OAuth2AccessTokenRespDTO tokenRespDTO;

@@ -22,6 +22,7 @@ import org.apache.amber.oauth2.common.exception.OAuthSystemException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.caching.core.CacheKey;
+import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
@@ -33,6 +34,7 @@ import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -85,7 +87,7 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
 
     @Override
     public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx)
-            throws IdentityOAuth2Exception {
+            throws IdentityException, SQLException {
         OAuth2AccessTokenRespDTO tokenRespDTO = new OAuth2AccessTokenRespDTO();
         OAuth2AccessTokenReqDTO oauth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
 
@@ -120,6 +122,7 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
                 .getPreprocessedToken(refreshToken);
 
         AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(), oauth2AccessTokenReqDTO.getClientId(),
+                tokenMgtDAO.getClientNameFromClientID(oauth2AccessTokenReqDTO.getClientId()),
                 tokReqMsgCtx.getScope(), timestamp, validityPeriod);
         accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
         accessTokenDO.setRefreshToken(preprocessedRefreshToken);

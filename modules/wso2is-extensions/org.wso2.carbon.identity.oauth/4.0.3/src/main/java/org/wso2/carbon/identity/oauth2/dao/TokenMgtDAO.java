@@ -368,7 +368,7 @@ public class TokenMgtDAO {
 
 
             }
-            dataDO = new AccessTokenDO(authorizedUser, appName, scope, timestamp, validityPeriod);
+            dataDO = new AccessTokenDO(authorizedUser, clientId, appName, scope, timestamp, validityPeriod);
 
         } catch (IdentityException e) {
             String errorMsg = "Error when getting an Identity Persistence Store instance.";
@@ -420,6 +420,36 @@ public class TokenMgtDAO {
         } finally {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }
+    }
+
+    public String getClientNameFromClientID (String clientID) throws IdentityException, SQLException {
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet consumerNameResultSet;
+        String clientId = clientID;
+        String appName = null;
+        try {
+            connection = JDBCPersistenceManager.getInstance().getDBConnection();
+            prepStmt = connection.prepareStatement(SQLQueries.FIND_CONSUMER_APP_NAME);
+            prepStmt.setString(1, clientId);
+            consumerNameResultSet = prepStmt.executeQuery();
+
+            if (consumerNameResultSet.next()){
+                appName = consumerNameResultSet.getString(1);
+            }
+
+        } catch (IdentityException e) {
+            String errorMsg = "Error when getting an Identity Persistence Store instance.";
+            log.error(errorMsg, e);
+            throw new IdentityOAuth2Exception(errorMsg, e);
+        } catch (SQLException e) {
+            log.error("Error when executing the SQL : " + SQLQueries.UPDATE_TOKE_STATE);
+            log.error(e.getMessage(), e);
+            throw new IdentityOAuth2Exception("Error while setting the Client name", e);
+        } finally {
+            IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
+        }
+            return appName;
     }
 
 }

@@ -120,6 +120,7 @@ public class BearerTokenValidator implements OAuth2TokenValidator {
         tokenRespDTO.setClientId(accessTokenDO.getClientId());
         tokenRespDTO.setExpiryTime(validityPeriodInMillis / 1000);
         tokenRespDTO.setScope(accessTokenDO.getScope());
+        tokenRespDTO.setAppName(accessTokenDO.getAppName());
 
         // Add the token back to the cache in the case of a cache miss
         if (OAuthServerConfiguration.getInstance().isCacheEnabled() && !cacheHit) {

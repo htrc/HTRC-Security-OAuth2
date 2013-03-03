@@ -89,7 +89,7 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
             throws IdentityOAuth2Exception;
 
     public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx)
-            throws IdentityOAuth2Exception {
+            throws IdentityException, SQLException {
 
         OAuth2AccessTokenRespDTO tokenRespDTO;
         OAuth2AccessTokenReqDTO oAuth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
@@ -136,6 +136,7 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
                     }
                     if (cacheEnabled) {
                         AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(), oAuth2AccessTokenReqDTO.getClientId(),
+                                tokenMgtDAO.getClientNameFromClientID(oAuth2AccessTokenReqDTO.getClientId()),
                                 tokReqMsgCtx.getScope(), new Timestamp(System.currentTimeMillis()), tokenRespDTO.getExpiresIn());
                         accessTokenDO.setRefreshToken(tokenRespDTO.getRefreshToken());
                         accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
@@ -199,6 +200,7 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
                     .getPreprocessedToken(refreshToken);
 
             AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(),oAuth2AccessTokenReqDTO.getClientId(),
+                    tokenMgtDAO.getClientNameFromClientID(oAuth2AccessTokenReqDTO.getClientId()),
                     tokReqMsgCtx.getScope(), timestamp, validityPeriod);
             accessTokenDO.setRefreshToken(preprocessedRefreshToken);
             accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);

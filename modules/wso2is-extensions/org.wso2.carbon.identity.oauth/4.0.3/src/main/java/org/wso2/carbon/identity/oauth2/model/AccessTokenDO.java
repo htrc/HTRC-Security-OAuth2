@@ -34,6 +34,8 @@ public class AccessTokenDO extends CacheEntry {
 
     private String clientId;
 
+    private String appName;
+
     private String[] scope;
 
     private String tokenState;
@@ -54,9 +56,10 @@ public class AccessTokenDO extends CacheEntry {
 
     private long validityPeriod;
 
-    public AccessTokenDO(String authzUser, String clientId, String[] scope, Timestamp issuedTime, long validityPeriod) {
+    public AccessTokenDO(String authzUser, String clientId, String appName, String[] scope, Timestamp issuedTime, long validityPeriod) {
         this.authzUser = authzUser;
         this.clientId = clientId;
+        this.appName = appName;
         this.scope = scope;
         this.issuedTime = issuedTime;
         this.validityPeriod = validityPeriod;
@@ -69,6 +72,10 @@ public class AccessTokenDO extends CacheEntry {
 
     public String getClientId() {
         return clientId;
+    }
+
+    public String getAppName() {
+        return appName;
     }
 
     public String[] getScope() {

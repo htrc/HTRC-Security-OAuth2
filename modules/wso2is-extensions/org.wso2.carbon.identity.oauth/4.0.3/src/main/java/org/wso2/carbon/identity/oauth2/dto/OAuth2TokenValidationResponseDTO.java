@@ -34,6 +34,8 @@ public class OAuth2TokenValidationResponseDTO {
     private String errorMsg;
 
     private String clientId;
+
+    private String appName;
     
     private String jwt;   
 
@@ -91,6 +93,14 @@ public class OAuth2TokenValidationResponseDTO {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName){
+        this.appName = appName;
     }
 
 }

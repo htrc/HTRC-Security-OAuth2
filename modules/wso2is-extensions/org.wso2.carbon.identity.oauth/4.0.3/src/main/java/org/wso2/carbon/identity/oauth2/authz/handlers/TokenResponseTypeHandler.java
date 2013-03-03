@@ -22,6 +22,7 @@ import org.apache.amber.oauth2.common.exception.OAuthSystemException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.caching.core.CacheKey;
+import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
@@ -31,6 +32,7 @@ import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
 import org.wso2.carbon.identity.oauth2.model.AccessTokenDO;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -71,9 +73,16 @@ public class TokenResponseTypeHandler extends AbstractAuthorizationHandler {
         // convert back to milliseconds
         validityPeriod = validityPeriod * 1000;
 
-        AccessTokenDO accessTokenDO = new AccessTokenDO(authorizationReqDTO.getUsername(),
-                authorizationReqDTO.getConsumerKey(),
-                oauthAuthzMsgCtx.getApprovedScope(), timestamp, validityPeriod);
+        AccessTokenDO accessTokenDO = null;
+        try {
+            accessTokenDO = new AccessTokenDO(authorizationReqDTO.getUsername(),
+                    authorizationReqDTO.getConsumerKey(), tokenMgtDAO.getClientNameFromClientID(authorizationReqDTO.getConsumerKey()),
+                    oauthAuthzMsgCtx.getApprovedScope(), timestamp, validityPeriod);
+        } catch (IdentityException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
 
         // Persist the access token in database

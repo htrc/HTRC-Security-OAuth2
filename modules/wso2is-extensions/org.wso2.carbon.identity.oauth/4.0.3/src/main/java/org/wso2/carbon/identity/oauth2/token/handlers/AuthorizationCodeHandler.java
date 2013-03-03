@@ -21,6 +21,7 @@ package org.wso2.carbon.identity.oauth2.token.handlers;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.caching.core.CacheKey;
+import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
@@ -29,6 +30,8 @@ import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.model.AuthzCodeDO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
+
+import java.sql.SQLException;
 
 /**
  * Implements the AuthorizationGrantHandler for the Grant Type : authorization_code.
@@ -144,7 +147,7 @@ public class AuthorizationCodeHandler extends AbstractAuthorizationGrantHandler 
 
     @Override
     public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx)
-            throws IdentityOAuth2Exception {
+            throws IdentityException, SQLException {
         OAuth2AccessTokenRespDTO tokenRespDTO = super.issue(tokReqMsgCtx);
 
         // get the token from the OAuthTokenReqMessageContext which is stored while validating
