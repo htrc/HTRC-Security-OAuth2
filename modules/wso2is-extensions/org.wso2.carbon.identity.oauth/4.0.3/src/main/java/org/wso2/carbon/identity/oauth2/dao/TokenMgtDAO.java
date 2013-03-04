@@ -355,6 +355,8 @@ public class TokenMgtDAO {
                         Calendar.getInstance(TimeZone.getTimeZone("UTC")));
                 clientId = resultSet.getString(4);
                 validityPeriod = resultSet.getLong(5);
+            } else {
+                return null;
             }
 
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
@@ -365,8 +367,6 @@ public class TokenMgtDAO {
 
             if (consumerNameResultSet.next()){
                 appName = consumerNameResultSet.getString(1);
-
-
             }
             dataDO = new AccessTokenDO(authorizedUser, clientId, appName, scope, timestamp, validityPeriod);
 
