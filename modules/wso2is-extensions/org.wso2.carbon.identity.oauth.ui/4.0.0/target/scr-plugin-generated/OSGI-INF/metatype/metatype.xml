@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0" localization="OSGI-INF/metatype/metatype">
-    <OCD id="identity.provider.oauth.ui.component" name="%identity.provider.oauth.ui.component.name" description="%identity.provider.oauth.ui.component.description"/>
-    <Designate pid="identity.provider.oauth.ui.component">
-        <Object ocdref="identity.provider.oauth.ui.component"/>
-    </Designate>
-</metatype:MetaData>
