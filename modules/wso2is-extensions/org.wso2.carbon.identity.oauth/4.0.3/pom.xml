@@ -19,7 +19,7 @@
 		<groupId>org.wso2.carbon</groupId>
 		<artifactId>identity</artifactId>
 		<version>4.0.0</version>
-<relativePath>../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -27,9 +27,42 @@
 	<artifactId>org.wso2.carbon.identity.oauth</artifactId>
 	<version>4.0.3</version>
 	<packaging>bundle</packaging>
+
+    <!-- Project Information -->
 	<name>WSO2 Carbon - OAuth</name>
 	<description>A custom wso2 products or solution</description>
-	<url>http://wso2.org</url>
+	<url>http://wiki.htrc.illinois.edu/display/DEV/wso2is-extensions</url>
+
+    <organization>
+        <name>HathiTrust Research Center</name>
+        <url>http://www.hathitrust.org/htrc</url>
+    </organization>
+
+    <!-- Environment Settings -->
+    <issueManagement>
+        <system>jira</system>
+        <url>http://jira.htrc.illinois.edu/browse/AUTH</url>
+    </issueManagement>
+
+    <!--<ciManagement>-->
+    <!--<system>bamboo</system>-->
+    <!--<url>http://bamboo.htrc.illinois.edu/browse/<PROJECT-BAMBOO-KEY></url>-->
+    <!--</ciManagement>-->
+
+    <scm>
+        <connection>scm:svn:${public.svn.root}/oauth2-client/trunk</connection>
+        <developerConnection>scm:svn:${developer.svn.root}/wso2is-extensions/trunk</developerConnection>
+        <url>${fisheye.svn.root}/wso2is-extensions/trunk</url>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <orbit.version.axis2>1.6.1.wso2v5</orbit.version.axis2>
+        <orbit.version.axiom>1.2.11.wso2v2</orbit.version.axiom>
+        <public.svn.root>svn://svn.code.sf.net/p/htrc/code</public.svn.root>
+        <developer.svn.root>svn+ssh://svn.code.sf.net/p/htrc/code</developer.svn.root>
+        <fisheye.svn.root>http://fisheye.htrc.illinois.edu/changelog</fisheye.svn.root>
+    </properties>
 
 	<dependencies>
 		<dependency>
@@ -104,7 +137,45 @@
             <version>1.4.0.wso2v1</version>
         </dependency>
 	</dependencies>
+    <repositories>
+        <repository>
+            <id>internal</id>
+            <name>Internal Release Repository</name>
+            <url>http://htrc.illinois.edu:8080/archiva/repository/internal/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>snapshots</id>
+            <name>Internal Snapshot Repository</name>
+            <url>http://htrc.illinois.edu:8080/archiva/repository/snapshots/</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>internal</id>
+            <url>http://htrc.illinois.edu:8080/archiva/repository/internal/</url>
+        </pluginRepository>
+    </pluginRepositories>
+    <distributionManagement>
+        <repository>
+            <id>htrc.archiva.internal</id>
+            <name>HTRC Internal Release Repository</name>
+            <url>http://htrc.illinois.edu:8080/archiva/repository/internal</url>
+        </repository>
+        <snapshotRepository>
+            <id>htrc.archiva.snapshots</id>
+            <name>HTRC Snapshots Repository</name>
+            <url>http://htrc.illinois.edu:8080/archiva/repository/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
+    <!-- Build Settings -->
 	<build>
 		<plugins>
 			<plugin>
@@ -148,6 +219,31 @@
 					</instructions>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-svnexe</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <tagBase>${developer.svn.root}/wso2is-extensions/tags</tagBase>
+                    <useReleaseProfile>false</useReleaseProfile>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 
