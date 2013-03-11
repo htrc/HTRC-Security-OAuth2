@@ -137,7 +137,17 @@ public class OAuth2Filter implements Filter {
             OAuthAccessResourceRequest accessResourceRequest = new OAuthAccessResourceRequest(req, TokenType.BEARER);
             accessToken = accessResourceRequest.getAccessToken();
 
-            auditor.log("REQUEST_RECEIVED", accessToken);
+            String url = null;
+            int port = 0;
+            String host = null;
+            String address = null;
+            if (req instanceof HttpServletRequest) {
+                url = ((HttpServletRequest)req).getRequestURL().toString();
+                port = ((HttpServletRequest)req).getRemotePort();
+                host = ((HttpServletRequest)req).getRemoteHost().toString();
+                address = ((HttpServletRequest)req).getRemoteAddr().toString();
+            }
+            auditor.log("REQUEST_RECEIVED", accessToken , "URL:",url ,"HOST:", host, "ADDRESS:", address, "PORT:", String.valueOf(port));
 
             OAuth2ServiceClient client = new OAuth2ServiceClient(providerUrl, userName, password);
             OAuth2TokenValidationRequestDTO oauthReq = new OAuth2TokenValidationRequestDTO();
@@ -152,17 +162,16 @@ public class OAuth2Filter implements Filter {
             registered_user.add(responseDTO.getAuthorizedUser());
             client_ID.add(responseDTO.getClientId());
             app_name.add(responseDTO.getAppName());
-            if (responseDTO.getAuthorizedUser() != null){
+            if (responseDTO.getAuthorizedUser() != null) {
                 modifiedRequest.setRemoteUser(responseDTO.getAuthorizedUser());
-            }
-            else {
+            } else {
                 modifiedRequest.setRemoteUser(responseDTO.getAppName());
             }
 
             Map<String, List<String>> contextMap = contextExtractor.getContextMap();
-            if (responseDTO.getAuthorizedUser() != null){
+            if (responseDTO.getAuthorizedUser() != null) {
                 contextMap.put(KEY_REMOTE_USER, registered_user);
-            }else {
+            } else {
                 contextMap.put(KEY_REMOTE_USER, app_name);
             }
 

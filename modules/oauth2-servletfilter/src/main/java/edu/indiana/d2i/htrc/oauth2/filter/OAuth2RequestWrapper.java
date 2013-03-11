@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 public class OAuth2RequestWrapper extends HttpServletRequestWrapper {
 
     private String remoteUser;
+    private String remoteAddress;
 
 
     public OAuth2RequestWrapper(HttpServletRequest request) {
@@ -18,8 +19,17 @@ public class OAuth2RequestWrapper extends HttpServletRequestWrapper {
 
     }
 
+    public void setRemoteAddress(String address){
+        this.remoteAddress = address;
+
+    }
+
     @Override
     public String getRemoteUser() {
         return remoteUser;
+    }
+
+    public String getRemoteAddress() {
+        return remoteAddress;
     }
 }
