@@ -90,33 +90,33 @@ public class OAuth2Filter implements Filter {
 
 
             providerUrl = filterConfig.getInitParameter(OAUTH2_PROVIDER_URL);
-            if(providerUrl == null || providerUrl.isEmpty()){
+            if (providerUrl == null || providerUrl.isEmpty()) {
                 log.error("Cannot find OAuth2 provider URL in filter configuration!");
                 throw new RuntimeException("Cannot find OAuth2 provider URL in filter configuration!");
             }
             userName = filterConfig.getInitParameter(OAUTH2_PROVIDER_USERS);
-            if(userName == null || userName.isEmpty()){
+            if (userName == null || userName.isEmpty()) {
                 log.error("Cannot find OAuth2 provider username in filter configuration!");
                 throw new RuntimeException("Cannot find OAuth2 provider username in filter configuration!");
             }
 
             password = filterConfig.getInitParameter(OAUTH2_PROVIDER_PASSWORD);
-            if(password == null || password.isEmpty()){
+            if (password == null || password.isEmpty()) {
                 log.error("Cannot find OAuth2 provider password in filter configuration!");
                 throw new RuntimeException("Cannot find OAuth2 provider password in filter configuration!");
             }
-        // Trust store can be used when WSO2 IS is deployed with self-signed certificates
-        trustStore = filterConfig.getInitParameter(TRUST_STORE);
-        trustStorePassword = filterConfig.getInitParameter(TRUST_STORE_PASSWORD);
+            // Trust store can be used when WSO2 IS is deployed with self-signed certificates
+            trustStore = filterConfig.getInitParameter(TRUST_STORE);
+            trustStorePassword = filterConfig.getInitParameter(TRUST_STORE_PASSWORD);
 
-        if(trustStore != null && trustStorePassword != null){
-            System.setProperty(TRUST_STORE, trustStore);
-            System.setProperty(TRUST_STORE_PASSWORD, trustStorePassword);
-        }
+            if (trustStore != null && trustStorePassword != null) {
+                System.setProperty(TRUST_STORE, trustStore);
+                System.setProperty(TRUST_STORE_PASSWORD, trustStorePassword);
+            }
 
             realm = filterConfig.getInitParameter(OAUTH2_RESOURCE_REALM);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServletException(e);
         }
@@ -142,12 +142,12 @@ public class OAuth2Filter implements Filter {
             String host = null;
             String address = null;
             if (req instanceof HttpServletRequest) {
-                url = ((HttpServletRequest)req).getRequestURL().toString();
-                port = ((HttpServletRequest)req).getRemotePort();
-                host = ((HttpServletRequest)req).getRemoteHost().toString();
-                address = ((HttpServletRequest)req).getRemoteAddr().toString();
+                url = ((HttpServletRequest) req).getRequestURL().toString();
+                port = ((HttpServletRequest) req).getRemotePort();
+                host = ((HttpServletRequest) req).getRemoteHost().toString();
+                address = ((HttpServletRequest) req).getRemoteAddr().toString();
             }
-            auditor.log("REQUEST_RECEIVED", accessToken , "URL:",url ,"HOST:", host, "ADDRESS:", address, "PORT:", String.valueOf(port));
+            auditor.log("REQUEST_RECEIVED", accessToken, "URL:", url, "HOST:", host, "ADDRESS:", address, "PORT:", String.valueOf(port));
 
             OAuth2ServiceClient client = new OAuth2ServiceClient(providerUrl, userName, password);
             OAuth2TokenValidationRequestDTO oauthReq = new OAuth2TokenValidationRequestDTO();
@@ -156,11 +156,11 @@ public class OAuth2Filter implements Filter {
 
             // Need to fix this to return user information (reverse lookup)
             responseDTO = client.validateAuthenticationRequest(oauthReq);
+
             List<String> registered_user = new ArrayList<String>();
-            List<String> client_ID = new ArrayList<String>();
             List<String> app_name = new ArrayList<String>();
+
             registered_user.add(responseDTO.getAuthorizedUser());
-            client_ID.add(responseDTO.getClientId());
             app_name.add(responseDTO.getAppName());
             if (responseDTO.getAuthorizedUser() != null) {
                 modifiedRequest.setRemoteUser(responseDTO.getAuthorizedUser());
