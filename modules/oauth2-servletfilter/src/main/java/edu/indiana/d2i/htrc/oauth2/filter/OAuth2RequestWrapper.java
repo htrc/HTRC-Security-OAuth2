@@ -8,7 +8,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class OAuth2RequestWrapper extends HttpServletRequestWrapper {
-    public static final String KEY_REMOTE_USER = "remote-user";
+    public static final String KEY_REMOTE_USER = "htrc-remote-user";
 
     private String remoteUser;
     private String remoteAddress;
@@ -44,6 +44,19 @@ public class OAuth2RequestWrapper extends HttpServletRequestWrapper {
         }
 
         return header;
+    }
+
+    @Override
+    public Enumeration getHeaders(String name) {
+        Enumeration headers = super.getHeaders(name);
+        if (headers == null && name.equals(KEY_REMOTE_USER)){
+            List<String> values = Collections.emptyList();
+            values.add(remoteUser);
+
+            return Collections.enumeration(values);
+        }
+
+        return headers;
     }
 
     public Enumeration getHeaderNames() {
