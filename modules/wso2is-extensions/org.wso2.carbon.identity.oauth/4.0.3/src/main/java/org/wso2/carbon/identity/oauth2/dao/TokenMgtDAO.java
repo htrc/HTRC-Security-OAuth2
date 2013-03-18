@@ -82,7 +82,7 @@ public class TokenMgtDAO {
             prepStmt.setString(3, consumerKey);
             prepStmt.setString(4, accessTokenDO.getAuthzUser());
             prepStmt.setTimestamp(5, accessTokenDO.getIssuedTime(), Calendar.getInstance(TimeZone.getTimeZone("UTC")));
-            prepStmt.setLong(6, accessTokenDO.getValidityPeriod() * 1000);
+            prepStmt.setLong(6, accessTokenDO.getValidityPeriod());
             prepStmt.setString(7, OAuth2Util.buildScopeString(accessTokenDO.getScope()));
             prepStmt.setString(8, accessTokenDO.getTokenState());
             prepStmt.setString(9, OAuth2Util.USER_TYPE_FOR_USER_TOKEN);

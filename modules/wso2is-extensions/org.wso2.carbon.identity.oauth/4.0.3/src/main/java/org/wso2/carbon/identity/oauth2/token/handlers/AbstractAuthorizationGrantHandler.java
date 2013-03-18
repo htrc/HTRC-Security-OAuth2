@@ -192,7 +192,7 @@ public abstract class AbstractAuthorizationGrantHandler implements Authorization
                 validityPeriod = callbackValidityPeriod;
             }
 
-            // validityPeriod = validityPeriod * 1000;
+            validityPeriod = validityPeriod * 1000;
             // Get the secured versions of the tokens to persist and to cache.
             String preprocessedAccessToken = tokenPersistencePreprocessor
                     .getPreprocessedToken(accessToken);
