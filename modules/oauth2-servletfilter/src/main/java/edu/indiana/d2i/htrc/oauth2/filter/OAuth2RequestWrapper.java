@@ -3,6 +3,7 @@ package edu.indiana.d2i.htrc.oauth2.filter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -50,7 +51,7 @@ public class OAuth2RequestWrapper extends HttpServletRequestWrapper {
     public Enumeration getHeaders(String name) {
         Enumeration headers = super.getHeaders(name);
         if ((headers == null || !headers.hasMoreElements())  && name.equals(KEY_REMOTE_USER)){
-            List<String> values = Collections.emptyList();
+            List<String> values = new ArrayList<String>();
             values.add(remoteUser);
 
             return Collections.enumeration(values);
