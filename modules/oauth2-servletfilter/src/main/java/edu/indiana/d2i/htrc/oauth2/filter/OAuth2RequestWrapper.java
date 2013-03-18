@@ -49,7 +49,7 @@ public class OAuth2RequestWrapper extends HttpServletRequestWrapper {
     @Override
     public Enumeration getHeaders(String name) {
         Enumeration headers = super.getHeaders(name);
-        if (headers == null && name.equals(KEY_REMOTE_USER)){
+        if ((headers == null || !headers.hasMoreElements())  && name.equals(KEY_REMOTE_USER)){
             List<String> values = Collections.emptyList();
             values.add(remoteUser);
 
