@@ -219,7 +219,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <tagBase>${developer.svn.root}/oauth2-servletfilter/tags</tagBase>
+                    <tagBase>${developer.svn.root}/oauth2-userinfo/tags</tagBase>
                     <useReleaseProfile>false</useReleaseProfile>
                 </configuration>
             </plugin>

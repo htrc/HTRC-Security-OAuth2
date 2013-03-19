@@ -96,6 +96,7 @@ public class OAuth2UserInfoEndpoint {
 
 
 
+
                 Response.ResponseBuilder respBuilder = Response
                         .status(response.getResponseStatus())
                         .header(OAuthConstants.HTTP_RESP_HEADER_CACHE_CONTROL,
