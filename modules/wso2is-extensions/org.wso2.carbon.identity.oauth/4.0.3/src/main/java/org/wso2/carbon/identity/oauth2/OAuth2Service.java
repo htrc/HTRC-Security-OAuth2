@@ -224,19 +224,21 @@ public class OAuth2Service extends AbstractAdmin {
                 // cache hit, do the type check.
                 if (result instanceof AccessTokenDO) {
                     accessTokenDO = (AccessTokenDO) result;
+
                     cacheHit = true;
                 }
             }
             // Cache miss, load the access token info from the database.
             if (accessTokenDO == null) {
                 accessTokenDO = tokenMgtDAO.validateBearerToken(preprocessedAccessToken);
-                if (accessTokenDO != null){
-                    UserRealm ur = getUserRealm();
-                    UserStoreManager um = ur.getUserStoreManager();
-                    accessTokenDO.setUserFullName(um.getUserClaimValue(accessTokenDO.getAuthzUser(), "http://wso2.org/claims/givenname" , "default")
-                    + " "+ um.getUserClaimValue(accessTokenDO.getAuthzUser(),"http://wso2.org/claims/lastname" , "default"));
-                    accessTokenDO.setUserEmail(um.getUserClaimValue(accessTokenDO.getAuthzUser(), "http://wso2.org/claims/emailaddress", "default"));
-                }
+            }
+
+            if (accessTokenDO != null && (accessTokenDO.getUserFullName() == null || accessTokenDO.getUserEmail() == null)) {
+                UserRealm ur = getUserRealm();
+                UserStoreManager um = ur.getUserStoreManager();
+                accessTokenDO.setUserFullName(um.getUserClaimValue(accessTokenDO.getAuthzUser(), "http://wso2.org/claims/givenname", "default")
+                        + " " + um.getUserClaimValue(accessTokenDO.getAuthzUser(), "http://wso2.org/claims/lastname", "default"));
+                accessTokenDO.setUserEmail(um.getUserClaimValue(accessTokenDO.getAuthzUser(), "http://wso2.org/claims/emailaddress", "default"));
             }
 
             // if the access token or client id is not valid
@@ -291,7 +293,7 @@ public class OAuth2Service extends AbstractAdmin {
             userInfoRespDTO.setErrorMsg("Error when processing the user information request.");
             return userInfoRespDTO;
         } catch (UserStoreException e) {
-            log.error("Error when getting user information",e);
+            log.error("Error when getting user information", e);
             userInfoRespDTO.setError(true);
             userInfoRespDTO.setErrorMsg("Error ahen getting user information");
             return userInfoRespDTO;
