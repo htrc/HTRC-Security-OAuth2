@@ -38,15 +38,12 @@ import java.rmi.RemoteException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
-public class OAuth2ServiceClient {
+public class OAuth2TokenValidationServiceClient {
     private OAuth2TokenValidationServiceStub stub;
 
     private static final int TIMEOUT_IN_MILLIS = 15 * 60 * 1000;
-    public static final String OAUTH2_PROVIDER_URL = "https://localhost:9443/services/";
-    public static final String OAUTH2_PROVIDER_USER_NAME = "admin";
-    public static final String OAUTH2_PROVIDER_PASSWORD = "admin";
 
-    public OAuth2ServiceClient(String providerUrl, String userName, String password) throws AxisFault {
+    public OAuth2TokenValidationServiceClient(String providerUrl, String userName, String password) throws AxisFault {
         String serviceURL = providerUrl + "OAuth2TokenValidationService";
         stub = new OAuth2TokenValidationServiceStub(null, serviceURL);
         CarbonUtils.setBasicAccessSecurityHeaders(userName, password, true, stub._getServiceClient());

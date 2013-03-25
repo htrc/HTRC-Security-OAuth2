@@ -8,6 +8,12 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+/*
+ * Servlet request wrapper implementation which allow us to change the
+  * remote user attribute inside the Oauth2 filter. Also this augment the
+  * getHeaders method of servlet request to return custom 'htrc-remote-user'
+  * header.
+ */
 public class OAuth2RequestWrapper extends HttpServletRequestWrapper {
     public static final String KEY_REMOTE_USER = "htrc-remote-user";
 
