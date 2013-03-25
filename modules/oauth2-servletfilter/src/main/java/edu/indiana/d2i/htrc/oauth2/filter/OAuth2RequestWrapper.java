@@ -34,13 +34,20 @@ import java.util.List;
  */
 public class OAuth2RequestWrapper extends HttpServletRequestWrapper {
     public static final String KEY_REMOTE_USER = "htrc-remote-user";
+    public static final String KEY_REMOTE_ADDRESS = "htrc-remote-address";
+    public static final String KEY_REQUEST_ID = "htrc-request-id";
 
     private String remoteUser;
     private String remoteAddress;
+    private String requestId;
 
 
     public OAuth2RequestWrapper(HttpServletRequest request) {
         super(request);
+    }
+
+    public void setRequestId(String id){
+        this.requestId = id;
     }
 
     public void setRemoteUser(String user){
@@ -79,6 +86,16 @@ public class OAuth2RequestWrapper extends HttpServletRequestWrapper {
             values.add(remoteUser);
 
             return Collections.enumeration(values);
+        } else if((headers == null || !headers.hasMoreElements())  && name.equals(KEY_REMOTE_ADDRESS)){
+            List<String> values = new ArrayList<String>();
+            values.add(getRemoteAddress());
+
+            return Collections.enumeration(values);
+        } else if ((headers == null || !headers.hasMoreElements())  && name.equals(KEY_REQUEST_ID)){
+            List<String> values = new ArrayList<String>();
+            values.add(requestId);
+
+            return Collections.enumeration(values);
         }
 
         return headers;
@@ -87,6 +104,8 @@ public class OAuth2RequestWrapper extends HttpServletRequestWrapper {
     public Enumeration getHeaderNames() {
         List<String> names = Collections.list(super.getHeaderNames());
         names.add(KEY_REMOTE_USER);
+        names.add(KEY_REMOTE_ADDRESS);
+        names.add(KEY_REQUEST_ID);
         return Collections.enumeration(names);
     }
 }

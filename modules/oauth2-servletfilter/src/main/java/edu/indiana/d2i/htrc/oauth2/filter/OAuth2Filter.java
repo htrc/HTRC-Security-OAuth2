@@ -41,10 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OAuth2Filter implements Filter {
     private static Log log = LogFactory.getLog(OAuth2Filter.class);
@@ -137,10 +134,14 @@ public class OAuth2Filter implements Filter {
      * @throws ServletException
      */
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        String errMsg = null;
+        String requestId = randomUUID();
+
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
         OAuth2RequestWrapper modifiedRequest = new OAuth2RequestWrapper(req);
-        String errMsg = null;
+
+        modifiedRequest.setRequestId(requestId);
 
         ContextExtractor contextExtractor = new ContextExtractor(req);
         Auditor auditor = AuditorFactory.getAuditor(contextExtractor.getContextMap());
@@ -152,12 +153,14 @@ public class OAuth2Filter implements Filter {
             OAuthAccessResourceRequest accessResourceRequest = new OAuthAccessResourceRequest(req, TokenType.BEARER);
             accessToken = accessResourceRequest.getAccessToken();
 
-            logRequestInformation(accessToken, req, auditor);
+            auditor.log("OAUTH2_FILTER_REQUEST_RECEIVED", requestId, accessToken);
+
             Enumeration headerNames = req.getHeaderNames();
             while (headerNames.hasMoreElements()){
                 String headerName = (String)headerNames.nextElement();
                 auditor.log(headerName,":",req.getHeader(headerName));
             }
+
             responseDTO =  validateToken(accessToken);
 
             List<String> registered_user = new ArrayList<String>();
@@ -181,24 +184,25 @@ public class OAuth2Filter implements Filter {
 
             // We need to create new auditor instance after we create the context map out of servlet request.
             auditor = AuditorFactory.getAuditor(contextMap);
-            auditor.log("REQUEST_AUTHENTICATED", accessToken);
+
+            auditor.log("OAUTH2_FILTER_REQUEST_AUTHENTICATED", requestId, accessToken);
         } catch (OAuthProblemException e) {
             errMsg = "OAuth exception.";
             log.error(errMsg, e);
-            auditor.log("UNAUTHENTICATED_REQUEST", accessToken);
+            auditor.log("OAUTH2_FILTER_UNAUTHENTICATED_REQUEST", requestId, accessToken);
             auditor.error(errMsg, accessToken, e.getError(), e.getMessage());
             respondWithError(res, e);
             return;
         } catch (OAuthSystemException e) {
             errMsg = "OAuth system exception." ;
             log.error(errMsg, e);
-            auditor.log("UNAUTHENTICATED_REQUEST", accessToken);
+            auditor.log("OAUTH2_FILTER_UNAUTHENTICATED_REQUEST", requestId, accessToken);
             auditor.error(errMsg, accessToken, e.getMessage());
             throw new ServletException(e);
         } catch (RemoteException re) {
             errMsg = "Error occurred while invoking token validation service.";
             log.error(errMsg, re);
-            auditor.log("UNAUTHENTICATED_REQUEST", accessToken);
+            auditor.log("OAUTH2_FILTER_UNAUTHENTICATED_REQUEST", requestId, accessToken);
             auditor.error(errMsg, accessToken, re.getMessage());
             throw new ServletException(errMsg, re);
         }
@@ -250,15 +254,6 @@ public class OAuth2Filter implements Filter {
         }
     }
 
-    private void logRequestInformation(String accessToken, HttpServletRequest req, Auditor auditor){
-        String url = req.getRequestURL().toString();
-        int port = req.getRemotePort();
-        String host = req.getRemoteHost().toString();
-        String address = req.getRemoteAddr().toString();
-
-        auditor.log("REQUEST_RECEIVED", accessToken, "URL:", url, "HOST:", host, "ADDRESS:", address, "PORT:", String.valueOf(port));
-    }
-
     private OAuth2TokenValidationResponseDTO validateToken(String accessToken) throws RemoteException, OAuthProblemException {
         OAuth2TokenValidationServiceClient client = new OAuth2TokenValidationServiceClient(providerUrl, userName, password);
 
@@ -267,5 +262,9 @@ public class OAuth2Filter implements Filter {
         oauthReq.setTokenType("bearer");
 
         return client.validateAuthenticationRequest(oauthReq);
+    }
+
+    private String randomUUID(){
+        return UUID.randomUUID().toString();
     }
 }
