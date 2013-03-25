@@ -20,6 +20,7 @@ package edu.indiana.d2i.htrc.oauth2.userinfo;
 
 import org.apache.amber.oauth2.as.response.OAuthASResponse;
 import org.apache.amber.oauth2.common.OAuth;
+import org.apache.amber.oauth2.common.exception.OAuthProblemException;
 import org.apache.amber.oauth2.common.exception.OAuthSystemException;
 import org.apache.amber.oauth2.common.message.OAuthResponse;
 import org.apache.commons.logging.Log;
@@ -50,7 +51,6 @@ public class OAuth2UserInfoEndpoint {
     @Path("/")
     @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-
     public Response getUserInformation(@Context HttpServletRequest request, MultivaluedMap<String, String> paramMap) throws OAuthSystemException {
 
         HttpServletRequestWrapper httpRequest = new OAuthUserInfoRequestWrapper(request, paramMap);
@@ -111,10 +111,6 @@ public class OAuth2UserInfoEndpoint {
                         .setUserEmail(oAuth2UserInfoRespDTO.getUserEmail())
                         .buildJSONMessage();
 
-
-
-
-
                 Response.ResponseBuilder respBuilder = Response
                         .status(response.getResponseStatus())
                         .header(OAuthConstants.HTTP_RESP_HEADER_CACHE_CONTROL,
@@ -125,17 +121,37 @@ public class OAuth2UserInfoEndpoint {
                 return respBuilder.entity(response.getBody()).build();
             }
 
-        } catch (Exception e) {
-
+        } catch (OAuthClientException e) {
+            return handleOAuthClientException();
+        } catch (OAuthProblemException e) {
+            return handleOAuthProblemException();
         }
-
-        return null;
     }
 
     private Response handleBasicAuthFailure() throws OAuthSystemException {
         OAuthResponse response = OAuthASResponse.errorResponse(HttpServletResponse.SC_UNAUTHORIZED)
                 .setError(OAuth2ErrorCodes.INVALID_CLIENT)
                 .setErrorDescription("Client Authentication was failed.").buildJSONMessage();
+        return Response.status(response.getResponseStatus())
+                .header(OAuthConstants.HTTP_RESP_HEADER_AUTHENTICATE, OAuthUIUtil.getRealmInfo())
+                .entity(response.getBody()).build();
+    }
+
+    private Response handleOAuthProblemException() throws OAuthSystemException {
+        OAuthResponse response = OAuthASResponse.errorResponse(HttpServletResponse.SC_BAD_REQUEST)
+                .setError(OAuth2ErrorCodes.INVALID_REQUEST)
+                .setErrorDescription("Cannot find required parameters.").buildJSONMessage();
+
+        return Response.status(response.getResponseStatus())
+                .header(OAuthConstants.HTTP_RESP_HEADER_AUTHENTICATE, OAuthUIUtil.getRealmInfo())
+                .entity(response.getBody()).build();
+    }
+
+    private Response handleOAuthClientException() throws OAuthSystemException {
+        OAuthResponse response = OAuthASResponse.errorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
+                .setError(OAuth2ErrorCodes.SERVER_ERROR)
+                .setErrorDescription("Error while invoking OAuth2 service.").buildJSONMessage();
+
         return Response.status(response.getResponseStatus())
                 .header(OAuthConstants.HTTP_RESP_HEADER_AUTHENTICATE, OAuthUIUtil.getRealmInfo())
                 .entity(response.getBody()).build();
