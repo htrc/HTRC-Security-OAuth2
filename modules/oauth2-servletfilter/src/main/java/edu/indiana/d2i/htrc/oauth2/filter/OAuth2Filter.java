@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
@@ -152,7 +153,11 @@ public class OAuth2Filter implements Filter {
             accessToken = accessResourceRequest.getAccessToken();
 
             logRequestInformation(accessToken, req, auditor);
-
+            Enumeration headerNames = req.getHeaderNames();
+            while (headerNames.hasMoreElements()){
+                String headerName = (String)headerNames.nextElement();
+                auditor.log(headerName,":",req.getHeader(headerName));
+            }
             responseDTO =  validateToken(accessToken);
 
             List<String> registered_user = new ArrayList<String>();
