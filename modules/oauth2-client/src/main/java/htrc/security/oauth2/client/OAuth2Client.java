@@ -34,6 +34,13 @@ public class OAuth2Client extends OAuthClient {
         super(oauthClient);
     }
 
+    /**
+     * Does the reverse lookup for OAuth tokens. You can get the user's information by giving access token.
+     * @param request
+     * @return
+     * @throws OAuthProblemException
+     * @throws OAuthSystemException
+     */
     public OAuthUserInfoResponse userInfo(OAuthClientRequest request) throws OAuthProblemException, OAuthSystemException {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put(OAuth.HeaderType.CONTENT_TYPE, OAuth.ContentType.URL_ENCODED);
