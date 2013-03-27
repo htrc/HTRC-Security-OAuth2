@@ -142,6 +142,7 @@ public class OAuth2Filter implements Filter {
         OAuth2RequestWrapper modifiedRequest = new OAuth2RequestWrapper(req);
 
         modifiedRequest.setRequestId(requestId);
+        modifiedRequest.setRemoteAddress(req.getRemoteAddr());
 
         ContextExtractor contextExtractor = new ContextExtractor(req);
         Auditor auditor = AuditorFactory.getAuditor(contextExtractor.getContextMap());
