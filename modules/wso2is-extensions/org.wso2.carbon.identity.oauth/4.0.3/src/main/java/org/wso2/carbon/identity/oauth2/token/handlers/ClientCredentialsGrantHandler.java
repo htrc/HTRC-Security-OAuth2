@@ -48,72 +48,72 @@ public class ClientCredentialsGrantHandler extends AbstractAuthorizationGrantHan
         super();
     }
 
-    @Override
-    public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx)
-            throws IdentityException, SQLException {
-        OAuth2AccessTokenRespDTO tokenRespDTO = new OAuth2AccessTokenRespDTO();
-        OAuth2AccessTokenReqDTO oAuth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
-
-        String accessToken;
-
-        try {
-            accessToken = oauthIssuerImpl.accessToken();
-        } catch (OAuthSystemException e) {
-            throw new IdentityOAuth2Exception("Error when generating the tokens.", e);
-        }
-
-        Timestamp timestamp = new Timestamp(new Date().getTime());
-
-        // Default Validity Period (in seconds)
-        long validityPeriod = OAuthServerConfiguration.getInstance()
-                .getDefaultAccessTokenValidityPeriodInSeconds();
-
-        // if a VALID validity period is set through the callback, then use it
-        long callbackValidityPeriod = tokReqMsgCtx.getValidityPeriod();
-        if ((callbackValidityPeriod != OAuth2Constants.UNASSIGNED_VALIDITY_PERIOD)
-                && callbackValidityPeriod > 0) {
-            validityPeriod = callbackValidityPeriod;
-        }
-
-        validityPeriod = validityPeriod * 1000;
-
-        AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(), oAuth2AccessTokenReqDTO.getClientId(),
-                tokenMgtDAO.getClientNameFromClientID(oAuth2AccessTokenReqDTO.getClientId()),
-                tokReqMsgCtx.getScope(), timestamp, validityPeriod);
-        accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
-
-        // get the secured version of the access token
-        String preprocessedAccessToken = tokenPersistencePreprocessor.getPreprocessedToken(accessToken);
-
-        // store the new token
-        tokenMgtDAO.storeAccessToken(preprocessedAccessToken, oAuth2AccessTokenReqDTO.getClientId(),
-                accessTokenDO);
-
-        // add the access token info to the cache, if it's enabled.
-        if(cacheEnabled){
-            CacheKey cacheKey = new OAuthCacheKey(preprocessedAccessToken);
-            oauthCache.addToCache(cacheKey, accessTokenDO);
-
-            if(log.isDebugEnabled()){
-                log.debug("Access Token info was added to the cache for the client id : " +
-                        oAuth2AccessTokenReqDTO.getClientId());
-            }
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("Persisted an access token with " +
-                    "Client ID : " + oAuth2AccessTokenReqDTO.getClientId() +
-                    "authorized user : " + tokReqMsgCtx.getAuthorizedUser() +
-                    "timestamp : " + timestamp +
-                    "validity period : " + validityPeriod +
-                    "scope : " + OAuth2Util.buildScopeString(tokReqMsgCtx.getScope()) +
-                    "Token State : " + OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
-        }
-
-        tokenRespDTO.setAccessToken(accessToken);
-        tokenRespDTO.setExpiresIn(validityPeriod/1000);
-        return tokenRespDTO;
-    }
+//    @Override
+//    public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx)
+//            throws IdentityException, SQLException {
+//        OAuth2AccessTokenRespDTO tokenRespDTO = new OAuth2AccessTokenRespDTO();
+//        OAuth2AccessTokenReqDTO oAuth2AccessTokenReqDTO = tokReqMsgCtx.getOauth2AccessTokenReqDTO();
+//
+//        String accessToken;
+//
+//        try {
+//            accessToken = oauthIssuerImpl.accessToken();
+//        } catch (OAuthSystemException e) {
+//            throw new IdentityOAuth2Exception("Error when generating the tokens.", e);
+//        }
+//
+//        Timestamp timestamp = new Timestamp(new Date().getTime());
+//
+//        // Default Validity Period (in seconds)
+//        long validityPeriod = OAuthServerConfiguration.getInstance()
+//                .getDefaultAccessTokenValidityPeriodInSeconds();
+//
+//        // if a VALID validity period is set through the callback, then use it
+//        long callbackValidityPeriod = tokReqMsgCtx.getValidityPeriod();
+//        if ((callbackValidityPeriod != OAuth2Constants.UNASSIGNED_VALIDITY_PERIOD)
+//                && callbackValidityPeriod > 0) {
+//            validityPeriod = callbackValidityPeriod;
+//        }
+//
+//        validityPeriod = validityPeriod * 1000;
+//
+//        AccessTokenDO accessTokenDO = new AccessTokenDO(tokReqMsgCtx.getAuthorizedUser(), oAuth2AccessTokenReqDTO.getClientId(),
+//                tokenMgtDAO.getClientNameFromClientID(oAuth2AccessTokenReqDTO.getClientId()),
+//                tokReqMsgCtx.getScope(), timestamp, validityPeriod);
+//        accessTokenDO.setTokenState(OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
+//
+//        // get the secured version of the access token
+//        String preprocessedAccessToken = tokenPersistencePreprocessor.getPreprocessedToken(accessToken);
+//
+//        // store the new token
+//        tokenMgtDAO.storeAccessToken(preprocessedAccessToken, oAuth2AccessTokenReqDTO.getClientId(),
+//                accessTokenDO);
+//
+//        // add the access token info to the cache, if it's enabled.
+//        if(cacheEnabled){
+//            CacheKey cacheKey = new OAuthCacheKey(preprocessedAccessToken);
+//            oauthCache.addToCache(cacheKey, accessTokenDO);
+//
+//            if(log.isDebugEnabled()){
+//                log.debug("Access Token info was added to the cache for the client id : " +
+//                        oAuth2AccessTokenReqDTO.getClientId());
+//            }
+//        }
+//
+//        if (log.isDebugEnabled()) {
+//            log.debug("Persisted an access token with " +
+//                    "Client ID : " + oAuth2AccessTokenReqDTO.getClientId() +
+//                    "authorized user : " + tokReqMsgCtx.getAuthorizedUser() +
+//                    "timestamp : " + timestamp +
+//                    "validity period : " + validityPeriod +
+//                    "scope : " + OAuth2Util.buildScopeString(tokReqMsgCtx.getScope()) +
+//                    "Token State : " + OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
+//        }
+//
+//        tokenRespDTO.setAccessToken(accessToken);
+//        tokenRespDTO.setExpiresIn(validityPeriod/1000);
+//        return tokenRespDTO;
+//    }
 
     @Override
     public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx)
