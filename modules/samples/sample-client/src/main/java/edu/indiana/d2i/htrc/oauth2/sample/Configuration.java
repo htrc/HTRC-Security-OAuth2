@@ -1,5 +1,7 @@
 package edu.indiana.d2i.htrc.oauth2.sample;
 
+import org.apache.amber.oauth2.common.message.types.GrantType;
+
 public class Configuration {
     private String accessTokenURL;
 
@@ -12,6 +14,8 @@ public class Configuration {
     private String userName;
 
     private String userPassword;
+
+    private GrantType grantType;
 
     private boolean isProduction;
 
@@ -53,6 +57,14 @@ public class Configuration {
 
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
+    }
+
+    public GrantType getGrantType(){
+        return grantType;
+    }
+
+    public void setGrantType(GrantType grantType){
+        this.grantType = grantType;
     }
 
     public boolean isProduction() {

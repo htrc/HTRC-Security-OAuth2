@@ -44,13 +44,38 @@ public class OAuth2TestClient {
         } catch (ParseException e) {
             HelpFormatter hf = new HelpFormatter();
             hf.printHelp("OAuth2 Sample Client", options);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();  //`To change body of catch statement use File | Settings | File Templates.
+        } catch (OAuthProblemException e) {
+            e.printStackTrace();
+        } catch (OAuthSystemException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
         }
 
     }
 
-    public void runTest(String configFilePath) throws IOException {
+    public void runTest(String configFilePath) throws IOException, OAuthProblemException, OAuthSystemException, KeyManagementException, NoSuchAlgorithmException {
         Configuration config = buildConfigurationFromPropertiesFile(configFilePath);
-        // TODO: Fill the test logic.
+        boolean isProduction = config.isProduction();
+        if(!isProduction){
+            trustAllCertificates();
+        }
+        List<String> tokens = getToken(config.getGrantType(),config);
+        String accessToken = tokens.get(0);
+        String refreshToken = tokens.get(1);
+
+        System.out.println(accessToken);
+        String responseBody = invokeResourceWebApp(accessToken);
+        boolean isValidResponse = isValidResponse(responseBody);
+
+        OAuthClientResponse oAuthClientResponse = getUserInformation(accessToken,isValidResponse,config.getGrantType(),config);
+
+        if (refreshToken != null && responseBody.contains("expired_token") && config.getGrantType() != GrantType.CLIENT_CREDENTIALS){
+            getUserInformation(refreshToken,isValidResponse,config.getGrantType(),config);
+        }
+
     }
 
     private String invokeResourceWebApp(String accessToken) throws IOException {
@@ -210,6 +235,7 @@ public class OAuth2TestClient {
             configuration.setProduction(isProduction(props.getProperty("oauth2.isproduction")));
             configuration.setUserName(props.getProperty("oauth2.username"));
             configuration.setUserPassword(props.getProperty("oauth2.userpassword"));
+            configuration.setGrantType(GrantType.valueOf(props.getProperty("oauth2.grant-type")));
 
             return configuration;
         }
