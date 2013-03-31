@@ -213,22 +213,20 @@ public class OAuth2Util {
         return clientId + ":" + authzCode;
     }
 
-    public static AccessTokenDO validateAccessTokenDO(AccessTokenDO accessTokenDO) {
-        long timestampSkew;
-        long currentTime;
-        long validityPeriod = accessTokenDO.getValidityPeriod() * 1000;
-        long issuedTime = accessTokenDO.getIssuedTime().getTime();
+    public static AccessTokenDO validateAccessTokenDO(AccessTokenDO accessTokenDO){
+        long currentTime, timestampSkew, validityPeriod, issuedTime;
+
+        validityPeriod = accessTokenDO.getValidityPeriod();
+        issuedTime = accessTokenDO.getIssuedTime().getTime();
         timestampSkew = OAuthServerConfiguration.getInstance().getDefaultTimeStampSkewInSeconds() * 1000;
         currentTime = System.currentTimeMillis();
-        //check the validity of cached OAuth2AccessToken Response
-        if (((issuedTime + validityPeriod) - (currentTime)) > 1000) {
-            //Set new validity period to response object
-            accessTokenDO.setValidityPeriod(((issuedTime + validityPeriod) - (currentTime)) / 1000);
-            //Set issued time period to response object
+
+        if(((issuedTime +   validityPeriod) - currentTime) > timestampSkew){
+            accessTokenDO.setValidityPeriod((issuedTime + validityPeriod - currentTime));
             accessTokenDO.setIssuedTime(new Timestamp(currentTime));
             return accessTokenDO;
         }
-        //returns null if cached OAuth2AccessToken response object is expired
+
         return null;
     }
 }
