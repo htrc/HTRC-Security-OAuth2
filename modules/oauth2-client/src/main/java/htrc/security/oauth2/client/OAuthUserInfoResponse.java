@@ -31,11 +31,9 @@ public class OAuthUserInfoResponse extends OAuthClientResponse{
     @Override
     protected void setBody(String s) throws OAuthProblemException {
         this.body = s;
-        System.out.println(s);
         try {
             this.parameters = JSONUtils.parseJSON(s);
         } catch (JSONException e) {
-            System.out.println(s);
             throw OAuthProblemException.error(OAuthError.CodeResponse.UNSUPPORTED_RESPONSE_TYPE,
                     "Invalid response! Response body is not " + OAuth.ContentType.JSON + " encoded");
         }
