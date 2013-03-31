@@ -46,14 +46,6 @@ public class AccessTokenDO extends CacheEntry {
 
     private Timestamp issuedTime;
 
-    public void setIssuedTime(Timestamp issuedTime) {
-        this.issuedTime = issuedTime;
-    }
-
-    public void setValidityPeriod(long validityPeriod) {
-        this.validityPeriod = validityPeriod;
-    }
-
     private long validityPeriod;
 
     public AccessTokenDO(String authzUser, String clientId, String appName, String[] scope, Timestamp issuedTime, long validityPeriod) {
@@ -64,6 +56,14 @@ public class AccessTokenDO extends CacheEntry {
         this.issuedTime = issuedTime;
         this.validityPeriod = validityPeriod;
 
+    }
+
+    public void setIssuedTime(Timestamp issuedTime) {
+        this.issuedTime = issuedTime;
+    }
+
+    public void setValidityPeriod(long validityPeriod) {
+        this.validityPeriod = validityPeriod;
     }
 
     public String getAuthzUser() {
