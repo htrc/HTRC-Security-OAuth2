@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.Properties;
 
 public class OAuth2TestClient {
-
     public static void main(String[] args) throws IOException {
         Options options = new Options();
         options.addOption("c", true, "Configuration file.");
 
         CommandLineParser parser = new BasicParser();
         CommandLine cmd;
+
 
         try {
             cmd = parser.parse(options, args);
@@ -45,7 +45,7 @@ public class OAuth2TestClient {
             HelpFormatter hf = new HelpFormatter();
             hf.printHelp("OAuth2 Sample Client", options);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();  //`To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (OAuthProblemException e) {
             e.printStackTrace();
         } catch (OAuthSystemException e) {
@@ -59,21 +59,32 @@ public class OAuth2TestClient {
     public void runTest(String configFilePath) throws IOException, OAuthProblemException, OAuthSystemException, KeyManagementException, NoSuchAlgorithmException {
         Configuration config = buildConfigurationFromPropertiesFile(configFilePath);
         boolean isProduction = config.isProduction();
-        if(!isProduction){
+        String accessToken = null;
+        String refreshToken = null;
+        List<String> tokens;
+
+        if (!isProduction) {
             trustAllCertificates();
         }
-        List<String> tokens = getToken(config.getGrantType(),config);
-        String accessToken = tokens.get(0);
-        String refreshToken = tokens.get(1);
-
-        System.out.println(accessToken);
+        if (accessToken == null) {
+            tokens = getToken(config.getGrantType(), config);
+            accessToken = tokens.get(0);
+            refreshToken = tokens.get(1);
+        }
+        System.out.println("access token: " + accessToken);
         String responseBody = invokeResourceWebApp(accessToken);
         boolean isValidResponse = isValidResponse(responseBody);
 
-        OAuthClientResponse oAuthClientResponse = getUserInformation(accessToken,isValidResponse,config.getGrantType(),config);
+        getUserInformation(accessToken, isValidResponse, config.getGrantType(), config);
 
-        if (refreshToken != null && responseBody.contains("expired_token") && config.getGrantType() != GrantType.CLIENT_CREDENTIALS){
-            getUserInformation(refreshToken,isValidResponse,config.getGrantType(),config);
+        if (refreshToken != null && responseBody.contains("expired_token") && config.getGrantType() != GrantType.CLIENT_CREDENTIALS) {
+            System.out.println("Inside expire handler..");
+            tokens = getTokenFromRefreshToken(refreshToken, config);
+            accessToken = tokens.get(0);
+            responseBody = invokeResourceWebApp(accessToken);
+            isValidResponse = isValidResponse(responseBody);
+            getUserInformation(accessToken, isValidResponse, GrantType.REFRESH_TOKEN, config);
+
         }
 
     }
@@ -99,6 +110,7 @@ public class OAuth2TestClient {
             inputStream = httpURLConnection.getInputStream();
         }
         String responseBody = OAuthUtils.saveStreamAsString(inputStream);
+        System.out.println("res: " + responseBody);
 
         return responseBody;
     }

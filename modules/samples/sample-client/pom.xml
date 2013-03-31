@@ -4,7 +4,7 @@
 
     <groupId>edu.indiana.d2i.htrc.oauth2</groupId>
     <artifactId>sample-client</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>sample-client</name>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>edu.indiana.d2i.htrc.oauth2</groupId>
             <artifactId>client-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.amber</groupId>
