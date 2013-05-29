@@ -22,6 +22,7 @@ import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.model.OAuthAppDO;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.oauth.cache.OAuthCache;
@@ -45,7 +46,7 @@ public class OAuthAdminService extends AbstractAdmin {
      * consumer secret key.
      *
      * @return An array containing the consumer key and the consumer secret correspondingly.
-     * @throws Exception    Error when persisting the data in the persistence store.
+     * @throws Exception Error when persisting the data in the persistence store.
      */
     public String[] registerOAuthConsumer() throws Exception {
 
@@ -64,9 +65,9 @@ public class OAuthAdminService extends AbstractAdmin {
     /**
      * Get all registered OAuth applications for the logged in user.
      *
-     * @return  An array of <code>OAuthConsumerAppDTO</code> objecting containing the application
-     * information of the user
-     * @throws Exception    Error when reading the data from the persistence store.
+     * @return An array of <code>OAuthConsumerAppDTO</code> objecting containing the application
+     *         information of the user
+     * @throws Exception Error when reading the data from the persistence store.
      */
     public OAuthConsumerAppDTO[] getAllOAuthApplicationData() throws Exception {
 
@@ -106,7 +107,7 @@ public class OAuthAdminService extends AbstractAdmin {
      * Get OAuth application data by the consumer key.
      *
      * @param consumerKey Consumer Key
-     * @return  <code>OAuthConsumerAppDTO</code> with application information
+     * @return <code>OAuthConsumerAppDTO</code> with application information
      * @throws Exception Error when reading application information from persistence store.
      */
     public OAuthConsumerAppDTO getOAuthApplicationData(String consumerKey) throws Exception {
@@ -123,11 +124,56 @@ public class OAuthAdminService extends AbstractAdmin {
         return dto;
     }
 
+    public OAuthConsumerAppDTO registerOAuth2Client(OAuthConsumerAppDTO appDTO) throws Exception {
+        OAuthConsumerAppDTO consumerAppDTO = new OAuthConsumerAppDTO();
+        String userName = getLoggedInUser();
+        String consumerKey;
+        String consumerSecret;
+        if (userName != null) {
+            String tenantUser = MultitenantUtils.getTenantAwareUsername(userName);
+            int tenantId = IdentityUtil.getTenantIdOFUser(userName);
+
+            OAuthAppDAO dao = new OAuthAppDAO();
+            OAuthAppDO app = new OAuthAppDO();
+            if (appDTO != null) {
+                app.setApplicationName(appDTO.getApplicationName());
+                app.setCallbackUrl(appDTO.getCallbackUrl());
+                if (appDTO.getOauthConsumerKey() == null) {
+                    consumerKey = OAuthUtil.getRandomNumber();
+                    consumerSecret = OAuthUtil.getRandomNumber();
+                    app.setOauthConsumerKey(consumerKey);
+                    app.setOauthConsumerSecret(consumerSecret);
+
+                } else {
+                    consumerKey = appDTO.getOauthConsumerKey();
+                    consumerSecret = appDTO.getOauthConsumerSecret();
+                    app.setOauthConsumerKey(consumerKey);
+                    app.setOauthConsumerSecret(consumerSecret);
+                }
+                app.setUserName(tenantUser);
+                app.setTenantId(tenantId);
+                if (appDTO.getOAuthVersion() != null) {
+                    app.setOauthVersion(appDTO.getOAuthVersion());
+                } else {   // by default, assume OAuth 2.0, if it is not set.
+                    app.setOauthVersion(OAuthConstants.OAuthVersions.VERSION_2);
+                }
+                dao.addOAuthApplication(app);
+
+                consumerAppDTO.setOauthConsumerKey(app.getOauthConsumerKey());
+                consumerAppDTO.setOauthConsumerSecret(app.getOauthConsumerSecret());
+
+                return consumerAppDTO;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Registers an OAuth consumer application.
      *
-     * @param application   <code>OAuthConsumerAppDTO</code> with application information
-     * @throws Exception    Error when persisting the application information to the persistence store
+     * @param application <code>OAuthConsumerAppDTO</code> with application information
+     * @throws Exception Error when persisting the application information to the persistence store
      */
     public void registerOAuthApplicationData(OAuthConsumerAppDTO application) throws Exception {
         String userName = getLoggedInUser();
@@ -182,14 +228,14 @@ public class OAuthAdminService extends AbstractAdmin {
     /**
      * Removes an OAuth consumer application.
      *
-     * @param consumerKey   Consumer Key
-     * @throws Exception    Error when removing the consumer information from the database.
+     * @param consumerKey Consumer Key
+     * @throws Exception Error when removing the consumer information from the database.
      */
     public void removeOAuthApplicationData(String consumerKey) throws Exception {
         OAuthAppDAO dao = new OAuthAppDAO();
         dao.removeConsumerApplication(consumerKey);
         // remove client credentials from cache
-        if(OAuthServerConfiguration.getInstance().isCacheEnabled()){
+        if (OAuthServerConfiguration.getInstance().isCacheEnabled()) {
             OAuthCache.getInstance().clearCacheEntry(new OAuthCacheKey(consumerKey));
             if (log.isDebugEnabled()) {
                 log.debug("Client credentials are removed from the cache.");

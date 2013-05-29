@@ -128,8 +128,7 @@ public class RefreshGrantTypeHandler extends AbstractAuthorizationGrantHandler {
         accessTokenDO.setRefreshToken(preprocessedRefreshToken);
 
         String clientId = oauth2AccessTokenReqDTO.getClientId();
-        String oldAccessToken = tokReqMsgCtx.getProperty(PREV_ACCESS_TOKEN);
-
+        String oldAccessToken = tokenPersistencePreprocessor.getPreprocessedToken(tokReqMsgCtx.getProperty(PREV_ACCESS_TOKEN));
         // We can make this an update operation after introducing a token_id column as the
         // primary key of the access token table.
 

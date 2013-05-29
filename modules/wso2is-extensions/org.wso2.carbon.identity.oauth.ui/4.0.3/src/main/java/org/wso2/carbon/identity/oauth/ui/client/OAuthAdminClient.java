@@ -21,8 +21,11 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
+import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceException;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceStub;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+
+import java.rmi.RemoteException;
 
 public class OAuthAdminClient {
 
@@ -57,6 +60,10 @@ public class OAuthAdminClient {
 	public void registerOAuthApplicationData(OAuthConsumerAppDTO application) throws Exception {
 		stub.registerOAuthApplicationData(application);
 	}
+
+    public OAuthConsumerAppDTO registerOAuth2Client(OAuthConsumerAppDTO appDTO) throws RemoteException, OAuthAdminServiceException {
+        return stub.registerOAuth2Client(appDTO);
+    }
 
 	public void removeOAuthApplicationData(String consumerkey) throws Exception {
 		stub.removeOAuthApplicationData(consumerkey);
