@@ -100,7 +100,7 @@
 
             <form class="well form-horizontal" id="loginForm"
                   <% if(!("failed".equals(authStatus))) { %>style="display:none"<% } %>
-                  action="oauth2-authn-finish.jsp">
+                  action="oauth2-authn-finish.jsp" method="POST">
 
                 <div class="alert alert-error"
                      id="errorMsg" <% if (!("failed".equals(authStatus))) { %>
