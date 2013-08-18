@@ -1,8 +1,14 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://oauth.identity.carbon.wso2.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2277="http://dto.oauth.identity.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://oauth.identity.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax2279="http://core.user.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://oauth.identity.carbon.wso2.org" xmlns:ax2280="http://api.user.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2277="http://dto.oauth.identity.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://oauth.identity.carbon.wso2.org">
     <wsdl:documentation>OAuthAdminService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax2278="http://dto.oauth.identity.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.user.carbon.wso2.org/xsd">
+            <xs:complexType name="UserStoreException">
+                <xs:sequence/>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2282="http://core.user.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2278="http://dto.oauth.identity.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
             <xs:import namespace="http://dto.oauth.identity.carbon.wso2.org/xsd"/>
+            <xs:import namespace="http://core.user.carbon.wso2.org/xsd"/>
             <xs:element name="OAuthAdminServiceException">
                 <xs:complexType>
                     <xs:sequence>
@@ -62,6 +68,27 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="OAuthAdminServiceUserStoreException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="UserStoreException" nillable="true" type="ax2279:UserStoreException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserEmail">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserEmailResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="getOAuthApplicationData">
                 <xs:complexType>
                     <xs:sequence>
@@ -89,6 +116,16 @@
                 </xs:complexType>
             </xs:element>
         </xs:schema>
+        <xs:schema xmlns:ax2281="http://api.user.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://core.user.carbon.wso2.org/xsd">
+            <xs:import namespace="http://api.user.carbon.wso2.org/xsd"/>
+            <xs:complexType name="UserStoreException">
+                <xs:complexContent>
+                    <xs:extension base="ax2280:UserStoreException">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.oauth.identity.carbon.wso2.org/xsd">
             <xs:complexType name="OAuthConsumerAppDTO">
                 <xs:sequence>
@@ -101,6 +138,15 @@
             </xs:complexType>
         </xs:schema>
     </wsdl:types>
+    <wsdl:message name="getUserEmailRequest">
+        <wsdl:part name="parameters" element="ns1:getUserEmail"/>
+    </wsdl:message>
+    <wsdl:message name="getUserEmailResponse">
+        <wsdl:part name="parameters" element="ns1:getUserEmailResponse"/>
+    </wsdl:message>
+    <wsdl:message name="OAuthAdminServiceUserStoreException">
+        <wsdl:part name="parameters" element="ns1:OAuthAdminServiceUserStoreException"/>
+    </wsdl:message>
     <wsdl:message name="registerOAuth2ClientRequest">
         <wsdl:part name="parameters" element="ns1:registerOAuth2Client"/>
     </wsdl:message>
@@ -138,6 +184,11 @@
         <wsdl:part name="parameters" element="ns1:registerOAuthApplicationData"/>
     </wsdl:message>
     <wsdl:portType name="OAuthAdminServicePortType">
+        <wsdl:operation name="getUserEmail">
+            <wsdl:input message="tns:getUserEmailRequest" wsaw:Action="urn:getUserEmail"/>
+            <wsdl:output message="tns:getUserEmailResponse" wsaw:Action="urn:getUserEmailResponse"/>
+            <wsdl:fault message="tns:OAuthAdminServiceUserStoreException" name="OAuthAdminServiceUserStoreException" wsaw:Action="urn:getUserEmailOAuthAdminServiceUserStoreException"/>
+        </wsdl:operation>
         <wsdl:operation name="registerOAuth2Client">
             <wsdl:input message="tns:registerOAuth2ClientRequest" wsaw:Action="urn:registerOAuth2Client"/>
             <wsdl:output message="tns:registerOAuth2ClientResponse" wsaw:Action="urn:registerOAuth2ClientResponse"/>
@@ -183,6 +234,18 @@
             </wsdl:output>
             <wsdl:fault name="OAuthAdminServiceException">
                 <soap:fault use="literal" name="OAuthAdminServiceException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserEmail">
+            <soap:operation soapAction="urn:getUserEmail" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="OAuthAdminServiceUserStoreException">
+                <soap:fault use="literal" name="OAuthAdminServiceUserStoreException"/>
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="registerOAuthConsumer">
@@ -263,6 +326,18 @@
                 <soap12:fault use="literal" name="OAuthAdminServiceException"/>
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="getUserEmail">
+            <soap12:operation soapAction="urn:getUserEmail" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="OAuthAdminServiceUserStoreException">
+                <soap12:fault use="literal" name="OAuthAdminServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="registerOAuthConsumer">
             <soap12:operation soapAction="urn:registerOAuthConsumer" style="document"/>
             <wsdl:input>
@@ -331,6 +406,15 @@
         <http:binding verb="POST"/>
         <wsdl:operation name="registerOAuth2Client">
             <http:operation location="registerOAuth2Client"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserEmail">
+            <http:operation location="getUserEmail"/>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>

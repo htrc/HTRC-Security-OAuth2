@@ -30,6 +30,9 @@ import org.wso2.carbon.identity.oauth.cache.OAuthCacheKey;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
 import org.wso2.carbon.identity.oauth.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
@@ -223,6 +226,12 @@ public class OAuthAdminService extends AbstractAdmin {
         oauthappdo.setOauthConsumerSecret(consumerAppDTO.getOauthConsumerSecret());
         oauthappdo.setCallbackUrl(consumerAppDTO.getCallbackUrl());
         dao.updateConsumerApplication(oauthappdo);
+    }
+
+    public String getUserEmail(String userId) throws UserStoreException {
+        UserRealm ur = getUserRealm();
+        UserStoreManager um = ur.getUserStoreManager();
+        return um.getUserClaimValue(userId, "http://wso2.org/claims/emailaddress", "default");
     }
 
     /**
